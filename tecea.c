@@ -2228,6 +2228,7 @@ SEncontro cadastraEncontro(int num)
         flushs();
         e.nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(e.nomeencontro, strAux);
+        erro = 1;
     }
 
     erro = 0;
@@ -2283,6 +2284,7 @@ SEncontro cadastraEncontro(int num)
             {
                 printf("\nEsse amigo ja foi adicionado ao encontro.\n");
                 printf("Selecione outro amigo.\n");
+                pause();
             }
             else
             {
