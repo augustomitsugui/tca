@@ -77,6 +77,7 @@ int desejaAlterar();
 int validaData(int dd, int mm, int yy);
 void mensagemErro(int erro);
 void pause();
+int validaHora(int hora, int min);
 
 // funcao de memoria e arquivo
 
@@ -206,6 +207,18 @@ void pause()
     printf("\npressione qualquer tecla pra continuar. . .");
     getchar();
 #endif
+}
+
+#include <stdio.h>
+
+// Função que valida a hora
+int validaHora(int hora, int min)
+{
+    if (hora < 0 || hora >= 24 || min < 0 || min >= 60)
+    {
+        return -5;
+    }
+    return 0;
 }
 
 int desejaAlterar()
@@ -2112,6 +2125,13 @@ void mensagemErro(int erro)
     case -4:
         printf("Erro ao alocar memória\n");
         pause();
+        limparTela();
+        break;
+    case -5:
+        printf("Hora inválida!!\n");
+        pause();
+        limparTela();
+        break;
     }
 }
 
@@ -2138,7 +2158,6 @@ void incluiEncontro()
 
 SEncontro cadastraEncontro(int num)
 {
-
     SEncontro e;
     char strAux[100];
     int erro = 0, op = 0;
@@ -2146,36 +2165,28 @@ SEncontro cadastraEncontro(int num)
     limparTela();
     printf("***CRIANDO ENCONTRO***\n");
 
-    // dia do encontro
+    // Dia do encontro
     while (erro != 1)
     {
         limparTela();
+        printf("dia do encontro:\n");
+        scanf("%d", &e.dataencontro.dia);
+        printf("\nMês do encontro:\n");
+        scanf("%d", &e.dataencontro.mes);
+        printf("\nAno do encontro:\n");
+        scanf("%d", &e.dataencontro.ano);
 
-        while (erro != 1)
+        erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
+
+        if (erro != 1)
         {
-            printf("dia do encontro:\n");
-            scanf("%d", &e.dataencontro.dia);
-            flushs();
-            printf("mes do encontro:\n");
-            scanf("%d", &e.dataencontro.mes);
-            flushs();
-            printf("ano do encontro:\n");
-            scanf("%d", &e.dataencontro.ano);
-            flushs();
-
-            erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
-
-            if (erro != 1)
-            {
-                mensagemErro(erro);
-            }
+            mensagemErro(erro);
         }
     }
-
     erro = 0;
 
-    // amigos no encontro
-
+    // Amigos no encontro
+    e.enumamigos = 0;
     while (erro != 1)
     {
         limparTela();
@@ -2189,59 +2200,38 @@ SEncontro cadastraEncontro(int num)
         }
         else
         {
-            if (GEncontro[NEncontro].enumamigos == 0)
-            {
-                e.amigoencontro = (char **)malloc(sizeof(char *));
-            }
-            else
-            {
-                e.amigoencontro = (char **)realloc(e.amigoencontro, (GEncontro[NEncontro].enumamigos + 1) * sizeof(char *));
-            }
-
+            e.amigoencontro = e.enumamigos == 0 ? (char **)malloc(sizeof(char *)) : (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
             if (e.amigoencontro == NULL)
             {
                 mensagemErro(-4);
                 break;
             }
 
-            e.amigoencontro[GEncontro[NEncontro].enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
-
-            if (e.amigoencontro[GEncontro[NEncontro].enumamigos] == NULL)
+            e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+            if (e.amigoencontro[e.enumamigos] == NULL)
             {
                 mensagemErro(-4);
                 break;
             }
 
-            strcpy(e.amigoencontro[GEncontro[NEncontro].enumamigos], GAmigo[op - 1].nome);
-            GEncontro[NEncontro].enumamigos++;
+            strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
+            e.enumamigos++;
 
             printf("\n\nAmigo adicionado no encontro!\n");
-
             printf("\nSelecionar mais um amigo?\n1. Sim\n2. Não\n");
             scanf("%d", &op);
 
-            if (op == 1)
-            {
-                erro = 0;
-            }
-            else if (op == 2)
-            {
-                erro = 1;
-            }
-            else
-            {
-                mensagemErro(-1);
-            }
+            erro = op == 1 ? 0 : op == 2 ? 1
+                                         : (mensagemErro(-1), 0);
         }
     }
-
     erro = 0;
 
+    // Local do encontro
     while (erro != 1)
     {
-
         limparTela();
-        printf("qual é o local do encontro?\n");
+        printf("Qual é o local do encontro?\n");
         listaNomesLocal();
         scanf("%d", &op);
 
@@ -2251,19 +2241,65 @@ SEncontro cadastraEncontro(int num)
         }
         else
         {
-
-            e.localencontro = (char)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
-
+            e.localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
             if (e.localencontro == NULL)
             {
                 mensagemErro(-4);
                 break;
             }
-
-            strcpy(e.amigoencontro[GEncontro[NEncontro].enumamigos], GAmigo[op - 1].nome);
-            GEncontro[NEncontro].enumamigos++;
+            strcpy(e.localencontro, GLocal[op - 1].nomelocal);
+            erro = 1;
         }
     }
+    erro = 0;
+
+    // Categoria do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("Qual é a categoria do encontro?\n");
+        listaNomesCategoria();
+        scanf("%d", &op);
+
+        if (op <= 0 || op > NCat)
+        {
+            mensagemErro(-1);
+        }
+        else
+        {
+            e.categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
+            if (e.categoriaencontro == NULL)
+            {
+                mensagemErro(-4);
+                break;
+            }
+            strcpy(e.categoriaencontro, GCategoria[op - 1].nomecat);
+            erro = 1;
+        }
+    }
+    erro = 0;
+
+    // Hora do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("Digite a hora do encontro (HH MM): ");
+        scanf("%d %d", &e.horaencontro.hora, &e.horaencontro.minuto);
+
+        int verificadorhora = validaHora(e.horaencontro.hora, e.horaencontro.minuto);
+
+        if (verificadorhora == -5)
+        {
+            mensagemErro(-5);
+        }
+        else
+        {
+            printf("\n\nHora Adicionada!!\n");
+            pause();
+            erro = 1;
+        }
+    }
+
     return e;
 }
 
@@ -2276,7 +2312,7 @@ void imprimeEncontro(SEncontro e, int enc)
     printf("Amigos: ");
     for (int i = 0; i < e.enumamigos; i++)
     {
-        printf("[%s]; ", e.amigoencontro[i].nome);
+        printf("[%s]; ", e.amigoencontro[i]);
     }
 
     printf("\nLocal: %s\n", e.localencontro);
