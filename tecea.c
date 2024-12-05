@@ -144,6 +144,8 @@ void excluiCat();
 void incluiEncontro();
 SEncontro cadastraEncontro(int num);
 void imprimeEncontro(SEncontro e, int enc);
+void listaNomesEncontros();
+void listaTodosEncontros();
 
 // main e aux
 
@@ -884,6 +886,47 @@ void limpaLocal()
 
 // impressoras
 
+void imprimeEncontro(SEncontro e, int enc)
+
+{
+    printf("\nEncontro %d\n", enc + 1);
+
+    printf("%s\n", e.nomeencontro);
+    printf("Amigos no encontro: %d\n", e.enumamigos);
+    printf("Amigos: ");
+
+    for (int i = 0; i < e.enumamigos; i++)
+    {
+        printf("[%s]; ", e.amigoencontro[i]);
+    }
+
+    printf("\nLocal: %s\n", e.localencontro);
+    printf("Data: [ ");
+    printf(" %02d /", e.dataencontro.dia);
+    printf(" %02d /", e.dataencontro.mes);
+    printf(" %04d ]\n", e.dataencontro.ano);
+
+    printf("Categoria: %s\n", e.categoriaencontro);
+    printf("Hora: [%02i : %02i]\n", e.horaencontro.hora, e.horaencontro.minuto);
+}
+
+void listaTodosEncontros()
+{
+    limparTela();
+    if (NEncontro < 1)
+    {
+        printf("não existem encontros! adicione um!\n");
+    }
+    else
+    {
+        for (int i = 0; i < NEncontro; i++)
+        {
+            imprimeEncontro(GEncontro[i], i);
+            printf("\n");
+        }
+    }
+}
+
 void imprimeAmigo(SAmigo a, int num)
 {
     printf("Amigo [%d]\n", num + 1);
@@ -958,6 +1001,17 @@ void listaTodasCategorias()
         {
             imprimeCategoria(GCategoria[i], i);
         }
+    }
+}
+
+void listaNomesEncontros()
+{
+    printf("Encontros:\n\n");
+
+    for (int i = 0; i < NCat; i++)
+    {
+
+        printf("%d. [%s]\n", i + 1, GEncontro[i].nomeencontro);
     }
 }
 
@@ -1079,6 +1133,262 @@ void listaCat()
 }
 
 // cadastro
+
+void incluiEncontro()
+{
+    if (Namigo == 0 || Nlocal == 0 || NCat == 0)
+    {
+        printf("Você ainda não possui ");
+
+        if (Namigo == 0 && Nlocal == 0 && NCat == 0)
+        {
+            printf("nenhum amigo, nenhum local e nenhuma categoria adicionados.\n");
+        }
+        else
+        {
+            if (Namigo == 0)
+            {
+                printf("nenhum amigo adicionado");
+            }
+
+            if (Nlocal == 0)
+            {
+                if (Namigo == 0)
+                {
+                    printf(", "); // Adiciona uma vírgula entre os itens se já houver algo antes
+                }
+                printf("nenhum local adicionado");
+            }
+
+            if (NCat == 0)
+            {
+                if (Namigo == 0 || Nlocal == 0)
+                {
+                    printf(" e "); // Adiciona 'e' entre os itens, quando necessário
+                }
+                printf("nenhuma categoria adicionada");
+            }
+
+            printf(".\n");
+        }
+
+        printf("\nVolte ao menu e crie as opções necessárias!");
+    }
+
+    else
+    {
+
+        if (NEncontro == 0)
+        {
+            GEncontro = (SEncontro *)malloc(1 * sizeof(SEncontro));
+        }
+        else
+        {
+            GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro + 1) * sizeof(SEncontro));
+        }
+
+        GEncontro[NEncontro] = cadastraEncontro(NEncontro);
+        NEncontro++;
+    }
+}
+SEncontro cadastraEncontro(int num)
+{
+    SEncontro e;
+    char strAux[100];
+    int erro = 0, op = 0;
+
+    limparTela();
+    printf("***CRIANDO ENCONTRO***\n\n");
+
+    while (erro != 1)
+    {
+        printf("Digite o nome do encontro: ");
+        flushs();
+        gets(strAux);
+        flushs();
+        e.nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+        strcpy(e.nomeencontro, strAux);
+        erro = 1;
+    }
+
+    erro = 0;
+
+    // Dia do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
+        printf("dia do encontro:\n");
+        scanf("%d", &e.dataencontro.dia);
+        printf("\nMês do encontro:\n");
+        scanf("%d", &e.dataencontro.mes);
+        printf("\nAno do encontro:\n");
+        scanf("%d", &e.dataencontro.ano);
+
+        erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
+
+        if (erro != 1)
+        {
+            mensagemErro(erro);
+        }
+    }
+    erro = 0;
+
+    // amg no encontro
+    e.enumamigos = 0;
+    while (erro != 1)
+    {
+        limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
+        printf("\nQual amigo deseja adicionar no encontro?\n");
+        listaNomesAmigo();
+        scanf("%d", &op);
+
+        if (op <= 0 || op > Namigo)
+        {
+            mensagemErro(-1);
+        }
+        else
+        {
+            int amigoDuplicado = 0;
+            for (int i = 0; i < e.enumamigos; i++)
+            {
+                if (strcmp(e.amigoencontro[i], GAmigo[op - 1].nome) == 0)
+                {
+                    amigoDuplicado = 1;
+                    break;
+                }
+            }
+
+            if (amigoDuplicado)
+            {
+                printf("\nEsse amigo ja foi adicionado ao encontro.\n");
+                printf("Selecione outro amigo.\n");
+                pause();
+            }
+            else
+            {
+                e.amigoencontro = e.enumamigos == 0 ? (char **)malloc(sizeof(char *)) : (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
+                if (e.amigoencontro == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+
+                e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+                if (e.amigoencontro[e.enumamigos] == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+
+                strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
+                e.enumamigos++;
+
+                printf("\nAmigo adicionado no encontro!\n");
+
+                printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
+                scanf("%d", &op);
+
+                if (op == 1)
+                {
+                    erro = 0;
+                }
+                else if (op == 2)
+                {
+                    erro = 1;
+                }
+                else
+                {
+                    mensagemErro(-1);
+                }
+            }
+        }
+    }
+    erro = 0;
+
+    // loc do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
+        printf("Qual é o local do encontro?\n");
+        listaNomesLocal();
+        scanf("%d", &op);
+
+        if (op <= 0 || op > Nlocal)
+        {
+            mensagemErro(-1);
+        }
+        else
+        {
+            e.localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
+            if (e.localencontro == NULL)
+            {
+                mensagemErro(-4);
+                break;
+            }
+            strcpy(e.localencontro, GLocal[op - 1].nomelocal);
+            erro = 1;
+        }
+    }
+    erro = 0;
+
+    // cat do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
+        printf("Qual é a categoria do encontro?\n");
+        listaNomesCategoria();
+        scanf("%d", &op);
+
+        if (op <= 0 || op > NCat)
+        {
+            mensagemErro(-1);
+        }
+        else
+        {
+            e.categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
+            if (e.categoriaencontro == NULL)
+            {
+                mensagemErro(-4);
+                break;
+            }
+            strcpy(e.categoriaencontro, GCategoria[op - 1].nomecat);
+            erro = 1;
+        }
+    }
+    erro = 0;
+
+    // hr do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
+        printf("Digite a hora do encontro (HH MM): ");
+        scanf("%d %d", &e.horaencontro.hora, &e.horaencontro.minuto);
+
+        int verificadorhora = validaHora(e.horaencontro.hora, e.horaencontro.minuto);
+
+        if (verificadorhora == -5)
+        {
+            mensagemErro(-5);
+        }
+        else
+        {
+            printf("\n\nHora Adicionada!!\n");
+            pause();
+            erro = 1;
+        }
+    }
+
+    limparTela();
+    printf("Encontro adicionado!\n");
+    imprimeEncontro(e, num);
+    pause();
+    return e;
+}
 
 void incluiAmigo()
 {
@@ -2151,284 +2461,3 @@ void mensagemErro(int erro)
 }
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-// liberar encontro
-void incluiEncontro()
-{
-    if (Namigo == 0 || Nlocal == 0 || NCat == 0)
-    {
-        printf("Você ainda não possui ");
-
-        if (Namigo == 0 && Nlocal == 0 && NCat == 0)
-        {
-            printf("nenhum amigo, nenhum local e nenhuma categoria adicionados.\n");
-        }
-        else
-        {
-            if (Namigo == 0)
-            {
-                printf("nenhum amigo adicionado");
-            }
-
-            if (Nlocal == 0)
-            {
-                if (Namigo == 0)
-                {
-                    printf(", "); // Adiciona uma vírgula entre os itens se já houver algo antes
-                }
-                printf("nenhum local adicionado");
-            }
-
-            if (NCat == 0)
-            {
-                if (Namigo == 0 || Nlocal == 0)
-                {
-                    printf(" e "); // Adiciona 'e' entre os itens, quando necessário
-                }
-                printf("nenhuma categoria adicionada");
-            }
-
-            printf(".\n");
-        }
-
-        printf("\nVolte ao menu e crie as opções necessárias!");
-    }
-
-    else
-    {
-
-        if (NEncontro == 0)
-        {
-            GEncontro = (SEncontro *)malloc(1 * sizeof(SEncontro));
-        }
-        else
-        {
-            GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro + 1) * sizeof(SEncontro));
-        }
-
-        GEncontro[NEncontro] = cadastraEncontro(NEncontro);
-        NEncontro++;
-    }
-}
-
-SEncontro cadastraEncontro(int num)
-{
-    SEncontro e;
-    char strAux[100];
-    int erro = 0, op = 0;
-
-    limparTela();
-    printf("***CRIANDO ENCONTRO***\n\n");
-
-    while (erro != 1)
-    {
-        printf("Digite o nome do encontro: ");
-        flushs();
-        gets(strAux);
-        flushs();
-        e.nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        strcpy(e.nomeencontro, strAux);
-        erro = 1;
-    }
-
-    erro = 0;
-
-    // Dia do encontro
-    while (erro != 1)
-    {
-        limparTela();
-        printf("***CRIANDO ENCONTRO***\n\n");
-        printf("dia do encontro:\n");
-        scanf("%d", &e.dataencontro.dia);
-        printf("\nMês do encontro:\n");
-        scanf("%d", &e.dataencontro.mes);
-        printf("\nAno do encontro:\n");
-        scanf("%d", &e.dataencontro.ano);
-
-        erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
-
-        if (erro != 1)
-        {
-            mensagemErro(erro);
-        }
-    }
-    erro = 0;
-
-    // amg no encontro
-    e.enumamigos = 0;
-    while (erro != 1)
-    {
-        limparTela();
-        printf("***CRIANDO ENCONTRO***\n\n");
-        printf("\nQual amigo deseja adicionar no encontro?\n");
-        listaNomesAmigo();
-        scanf("%d", &op);
-
-        if (op <= 0 || op > Namigo)
-        {
-            mensagemErro(-1);
-        }
-        else
-        {
-            int amigoDuplicado = 0;
-            for (int i = 0; i < e.enumamigos; i++)
-            {
-                if (strcmp(e.amigoencontro[i], GAmigo[op - 1].nome) == 0)
-                {
-                    amigoDuplicado = 1;
-                    break;
-                }
-            }
-
-            if (amigoDuplicado)
-            {
-                printf("\nEsse amigo ja foi adicionado ao encontro.\n");
-                printf("Selecione outro amigo.\n");
-                pause();
-            }
-            else
-            {
-                e.amigoencontro = e.enumamigos == 0 ? (char **)malloc(sizeof(char *)) : (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
-                if (e.amigoencontro == NULL)
-                {
-                    mensagemErro(-4);
-                    break;
-                }
-
-                e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
-                if (e.amigoencontro[e.enumamigos] == NULL)
-                {
-                    mensagemErro(-4);
-                    break;
-                }
-
-                strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
-                e.enumamigos++;
-
-                printf("\nAmigo adicionado no encontro!\n");
-
-                printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
-                scanf("%d", &op);
-
-                if (op == 1)
-                {
-                    erro = 0;
-                }
-                else if (op == 2)
-                {
-                    erro = 1;
-                }
-                else
-                {
-                    mensagemErro(-1);
-                }
-            }
-        }
-    }
-    erro = 0;
-
-    // loc do encontro
-    while (erro != 1)
-    {
-        limparTela();
-        printf("***CRIANDO ENCONTRO***\n\n");
-        printf("Qual é o local do encontro?\n");
-        listaNomesLocal();
-        scanf("%d", &op);
-
-        if (op <= 0 || op > Nlocal)
-        {
-            mensagemErro(-1);
-        }
-        else
-        {
-            e.localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
-            if (e.localencontro == NULL)
-            {
-                mensagemErro(-4);
-                break;
-            }
-            strcpy(e.localencontro, GLocal[op - 1].nomelocal);
-            erro = 1;
-        }
-    }
-    erro = 0;
-
-    // cat do encontro
-    while (erro != 1)
-    {
-        limparTela();
-        printf("***CRIANDO ENCONTRO***\n\n");
-        printf("Qual é a categoria do encontro?\n");
-        listaNomesCategoria();
-        scanf("%d", &op);
-
-        if (op <= 0 || op > NCat)
-        {
-            mensagemErro(-1);
-        }
-        else
-        {
-            e.categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
-            if (e.categoriaencontro == NULL)
-            {
-                mensagemErro(-4);
-                break;
-            }
-            strcpy(e.categoriaencontro, GCategoria[op - 1].nomecat);
-            erro = 1;
-        }
-    }
-    erro = 0;
-
-    // hr do encontro
-    while (erro != 1)
-    {
-        limparTela();
-        printf("***CRIANDO ENCONTRO***\n\n");
-        printf("Digite a hora do encontro (HH MM): ");
-        scanf("%d %d", &e.horaencontro.hora, &e.horaencontro.minuto);
-
-        int verificadorhora = validaHora(e.horaencontro.hora, e.horaencontro.minuto);
-
-        if (verificadorhora == -5)
-        {
-            mensagemErro(-5);
-        }
-        else
-        {
-            printf("\n\nHora Adicionada!!\n");
-            pause();
-            erro = 1;
-        }
-    }
-
-    limparTela();
-    printf("Encontro adicionado!\n");
-    imprimeEncontro(e, num);
-    pause();
-    return e;
-}
-
-void imprimeEncontro(SEncontro e, int enc)
-{
-    printf("\nEncontro %d\n", enc + 1);
-
-    printf("%s\n", e.nomeencontro);
-    printf("Amigos no encontro: %d\n", e.enumamigos);
-    printf("Amigos: ");
-
-    for (int i = 0; i < e.enumamigos; i++)
-    {
-        printf("[%s]; ", e.amigoencontro[i]);
-    }
-
-    printf("\nLocal: %s\n", e.localencontro);
-    printf("Data: [ ");
-    printf(" %02d /", e.dataencontro.dia);
-    printf(" %02d /", e.dataencontro.mes);
-    printf(" %04d ]\n", e.dataencontro.ano);
-
-    printf("Categoria: %s\n", e.categoriaencontro);
-    printf("Hora: [%02i : %02i]\n", e.horaencontro.hora, e.horaencontro.minuto);
-}
