@@ -139,7 +139,11 @@ void editaCategoria();
 void switchCat(int op, int cat);
 void excluiCat();
 
+// funcoes pra encontro
+void incluiEncontro();
 SEncontro cadastraEncontro(int num);
+void imprimeEncontro(SEncontro e, int enc);
+
 // main e aux
 
 int main()
@@ -329,7 +333,7 @@ int menuPrincipal()
         menuCategoria();
         break;
     case 4:
-        // menuEncontro();
+        menuEncontro();
     case 5:
         listaMenu();
     case 6:
@@ -465,7 +469,7 @@ void menuEncontro()
     switch (op)
     {
     case 1:
-        //  adicionaEncontro();
+        incluiEncontro();
         break;
     case 2:
         // editaEncontro();
@@ -2138,28 +2142,67 @@ void mensagemErro(int erro)
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 // liberar encontro
-
-void incluiEncontro();
-
 void incluiEncontro()
 {
-    if (NEncontro == 0)
+    if (Namigo == 0 || Nlocal == 0 || NCat == 0)
     {
-        GEncontro = (SEncontro *)malloc(1 * sizeof(SEncontro));
-    }
-    else
-    {
-        GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro + 1) * sizeof(SEncontro));
+        printf("Você ainda não possui ");
+
+        if (Namigo == 0 && Nlocal == 0 && NCat == 0)
+        {
+            printf("nenhum amigo, nenhum local e nenhuma categoria adicionados.\n");
+        }
+        else
+        {
+            if (Namigo == 0)
+            {
+                printf("nenhum amigo adicionado");
+            }
+
+            if (Nlocal == 0)
+            {
+                if (Namigo == 0)
+                {
+                    printf(", "); // Adiciona uma vírgula entre os itens se já houver algo antes
+                }
+                printf("nenhum local adicionado");
+            }
+
+            if (NCat == 0)
+            {
+                if (Namigo == 0 || Nlocal == 0)
+                {
+                    printf(" e "); // Adiciona 'e' entre os itens, quando necessário
+                }
+                printf("nenhuma categoria adicionada");
+            }
+
+            printf(".\n");
+        }
+
+        printf("\nVolte ao menu e crie as opções necessárias!");
     }
 
-    // GEncontro[NEncontro] = cadastraEncontro(NEncontro);
-    NEncontro++;
+    else
+    {
+
+        if (NEncontro == 0)
+        {
+            GEncontro = (SEncontro *)malloc(1 * sizeof(SEncontro));
+        }
+        else
+        {
+            GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro + 1) * sizeof(SEncontro));
+        }
+
+        GEncontro[NEncontro] = cadastraEncontro(NEncontro);
+        NEncontro++;
+    }
 }
 
 SEncontro cadastraEncontro(int num)
 {
     SEncontro e;
-    char strAux[100];
     int erro = 0, op = 0;
 
     limparTela();
@@ -2185,7 +2228,7 @@ SEncontro cadastraEncontro(int num)
     }
     erro = 0;
 
-    // Amigos no encontro
+    // amg no encontro
     e.enumamigos = 0;
     while (erro != 1)
     {
@@ -2227,7 +2270,7 @@ SEncontro cadastraEncontro(int num)
     }
     erro = 0;
 
-    // Local do encontro
+    // loc do encontro
     while (erro != 1)
     {
         limparTela();
@@ -2253,7 +2296,7 @@ SEncontro cadastraEncontro(int num)
     }
     erro = 0;
 
-    // Categoria do encontro
+    // cat do encontro
     while (erro != 1)
     {
         limparTela();
@@ -2279,7 +2322,7 @@ SEncontro cadastraEncontro(int num)
     }
     erro = 0;
 
-    // Hora do encontro
+    // hr do encontro
     while (erro != 1)
     {
         limparTela();
@@ -2300,6 +2343,10 @@ SEncontro cadastraEncontro(int num)
         }
     }
 
+    limparTela();
+    printf("Encontro adicionado!\n");
+    imprimeEncontro(e, num);
+    pause();
     return e;
 }
 
@@ -2310,6 +2357,7 @@ void imprimeEncontro(SEncontro e, int enc)
     printf("%s\n", e.nomeencontro);
     printf("Amigos no encontro: %d\n", e.enumamigos);
     printf("Amigos: ");
+
     for (int i = 0; i < e.enumamigos; i++)
     {
         printf("[%s]; ", e.amigoencontro[i]);
