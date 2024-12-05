@@ -47,7 +47,7 @@ typedef struct
 {
     SData dataencontro;
     SHora horaencontro;
-    SLocal localencontro;
+    char *localencontro;
     char **amigoencontro;
     int enumamigos;
     char *categoriaencontro;
@@ -2089,7 +2089,7 @@ void mensagemErro(int erro)
     switch (erro)
     {
     default:
-        printf("ERRO!  ");
+        printf("ERRO!. . . ");
         pause();
         limparTela();
         break;
@@ -2109,6 +2109,9 @@ void mensagemErro(int erro)
         pause();
         limparTela();
         break;
+    case -4:
+        printf("Erro ao alocar memória\n");
+        pause();
     }
 }
 
@@ -2143,6 +2146,7 @@ SEncontro cadastraEncontro(int num)
     limparTela();
     printf("***CRIANDO ENCONTRO***\n");
 
+    // dia do encontro
     while (erro != 1)
     {
         limparTela();
@@ -2170,6 +2174,8 @@ SEncontro cadastraEncontro(int num)
 
     erro = 0;
 
+    // amigos no encontro
+
     while (erro != 1)
     {
         limparTela();
@@ -2194,16 +2200,18 @@ SEncontro cadastraEncontro(int num)
 
             if (e.amigoencontro == NULL)
             {
-                printf("Erro ao alocar memória.\n");
+                mensagemErro(-4);
                 break;
             }
 
             e.amigoencontro[GEncontro[NEncontro].enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+
             if (e.amigoencontro[GEncontro[NEncontro].enumamigos] == NULL)
             {
-                printf("Erro ao alocar memória para o nome do amigo.\n");
+                mensagemErro(-4);
                 break;
             }
+
             strcpy(e.amigoencontro[GEncontro[NEncontro].enumamigos], GAmigo[op - 1].nome);
             GEncontro[NEncontro].enumamigos++;
 
@@ -2227,12 +2235,40 @@ SEncontro cadastraEncontro(int num)
         }
     }
 
+    erro = 0;
+
+    while (erro != 1)
+    {
+
+        limparTela();
+        printf("qual é o local do encontro?\n");
+        listaNomesLocal();
+        scanf("%d", &op);
+
+        if (op <= 0 || op > Nlocal)
+        {
+            mensagemErro(-1);
+        }
+        else
+        {
+
+            e.localencontro = (char)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
+
+            if (e.localencontro == NULL)
+            {
+                mensagemErro(-4);
+                break;
+            }
+
+            strcpy(e.amigoencontro[GEncontro[NEncontro].enumamigos], GAmigo[op - 1].nome);
+            GEncontro[NEncontro].enumamigos++;
+        }
+    }
     return e;
 }
 
 void imprimeEncontro(SEncontro e, int enc)
 {
-
     printf("\nEncontro %d\n", enc + 1);
 
     printf("%s\n", e.nomeencontro);
@@ -2243,7 +2279,7 @@ void imprimeEncontro(SEncontro e, int enc)
         printf("[%s]; ", e.amigoencontro[i].nome);
     }
 
-    printf("\nLocal: %s\n", e.localencontro.nomelocal);
+    printf("\nLocal: %s\n", e.localencontro);
     printf("Data: [ ");
     printf(" %02d /", e.dataencontro.dia);
     printf(" %02d /", e.dataencontro.mes);
