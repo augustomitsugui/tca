@@ -2173,7 +2173,7 @@ SEncontro cadastraEncontro(int num)
     while (erro != 1)
     {
         limparTela();
-        printf("\nqual amigo deseja adicionar no encontro?\n");
+        printf("\nQual amigo deseja adicionar no encontro?\n");
         listaNomesAmigo();
         scanf("%d", &op);
 
@@ -2183,22 +2183,31 @@ SEncontro cadastraEncontro(int num)
         }
         else
         {
-
             if (GEncontro[NEncontro].enumamigos == 0)
             {
                 e.amigoencontro = (char **)malloc(sizeof(char *));
             }
             else
             {
-                e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
+                e.amigoencontro = (char **)realloc(e.amigoencontro, (GEncontro[NEncontro].enumamigos + 1) * sizeof(char *));
             }
 
-            e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
-            strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
+            if (e.amigoencontro == NULL)
+            {
+                printf("Erro ao alocar memória.\n");
+                break;
+            }
 
+            e.amigoencontro[GEncontro[NEncontro].enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+            if (e.amigoencontro[GEncontro[NEncontro].enumamigos] == NULL)
+            {
+                printf("Erro ao alocar memória para o nome do amigo.\n");
+                break;
+            }
+            strcpy(e.amigoencontro[GEncontro[NEncontro].enumamigos], GAmigo[op - 1].nome);
             GEncontro[NEncontro].enumamigos++;
 
-            printf("\n\nAmigo Adicionado no encontro!\n");
+            printf("\n\nAmigo adicionado no encontro!\n");
 
             printf("\nSelecionar mais um amigo?\n1. Sim\n2. Não\n");
             scanf("%d", &op);
