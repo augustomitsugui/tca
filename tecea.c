@@ -963,7 +963,6 @@ void listaTodasCategorias()
 
 void listaNomesAmigo()
 {
-    limparTela();
     if (Namigo < 1)
     {
         printf("não existe nada adicionado! adicione!!");
@@ -980,8 +979,6 @@ void listaNomesAmigo()
 }
 void listaNomesLocal()
 {
-
-    limparTela();
     printf("Locais:\n\n");
 
     for (int i = 0; i < Nlocal; i++)
@@ -992,8 +989,6 @@ void listaNomesLocal()
 }
 void listaNomesCategoria()
 {
-
-    limparTela();
     printf("Categorias:\n\n");
 
     for (int i = 0; i < NCat; i++)
@@ -1103,7 +1098,7 @@ SAmigo cadastraAmigo(int num)
 {
     SAmigo a;
     char strAux[100];
-    int erro = 0, ig = 0;
+    int erro = 0;
 
     while (erro != 1)
     {
@@ -1351,11 +1346,7 @@ void editaAmigo()
         limparTela();
         printf("Que amigo você deseja editar?\n\n");
 
-        for (int i = 0; i < Namigo; i++)
-        {
-            imprimeAmigo(GAmigo[i], i);
-            printf("\n");
-        }
+        listaNomesAmigo();
 
         while (op < 1 || op > Namigo)
         {
@@ -1576,7 +1567,7 @@ void editaLocal()
         limparTela();
         printf("Que Local você deseja editar?\n\n");
 
-        listaTodosLocais();
+        listaNomesLocal();
 
         while (op < 1 || op > Nlocal)
         {
@@ -1791,7 +1782,7 @@ void editaCategoria()
         limparTela();
         printf("Qual você deseja editar?\n\n");
 
-        listaTodasCategorias();
+        listaNomesCategoria();
 
         while (op < 1 || op > NCat)
         {
@@ -1891,7 +1882,7 @@ void excluiAmigo()
         return;
     }
 
-    listaTodosAmigos();
+    listaNomesAmigo();
 
     printf("\n\nQual deseja excluir? [ 1 - %d ]\n", Namigo);
 
@@ -1969,7 +1960,7 @@ void excluiLocal()
         return;
     }
 
-    listaTodosLocais();
+    listaNomesLocal();
 
     printf("\n\nQual deseja excluir? [ 1 - %d ]\n", Nlocal);
 
@@ -2049,7 +2040,7 @@ void excluiCat()
         return;
     }
 
-    listaTodasCategorias();
+    listaNomesCategoria();
 
     printf("\n\nQual deseja excluir? [ 1 - %d ]\n", NCat);
 
