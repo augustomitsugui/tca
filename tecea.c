@@ -107,6 +107,7 @@ void menuAmigo();
 void listaMenu();
 void menuLocal();
 void menuCategoria();
+void menuEncontro();
 
 // funcao pros amigos
 SAmigo cadastraAmigo(int num);
@@ -1114,25 +1115,44 @@ SAmigo cadastraAmigo(int num)
 
         if (Namigo > 0)
         {
+            int amigoDuplicado = 0;
+
             for (int i = 0; i < Namigo; i++)
             {
-                ig = (strcmp(strAux, GAmigo[i].nome));
-
-                if (ig != 0)
+                if (strcmp(strAux, GAmigo[i].nome) == 0)
                 {
-                    mensagemErro(-3);
-                    erro = 2;
+                    amigoDuplicado = 1;
                     break;
                 }
             }
-        }
 
-        else if (Namigo > 0 && erro != 2)
+            if (amigoDuplicado)
+            {
+                mensagemErro(-3);
+                erro = 2;
+            }
+            else
+            {
+                a.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+                if (a.nome == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+                strcpy(a.nome, strAux);
+                erro = 1;
+            }
+        }
+        else
         {
-            erro = 1;
             a.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            if (a.nome == NULL)
+            {
+                mensagemErro(-4);
+                break;
+            }
             strcpy(a.nome, strAux);
-            flushs();
+            erro = 1;
         }
     }
 
@@ -2203,15 +2223,29 @@ void incluiEncontro()
 SEncontro cadastraEncontro(int num)
 {
     SEncontro e;
+    char strAux[100];
     int erro = 0, op = 0;
 
     limparTela();
-    printf("***CRIANDO ENCONTRO***\n");
+    printf("***CRIANDO ENCONTRO***\n\n");
+
+    while (erro != 1)
+    {
+        printf("Digite o nome do encontro: ");
+        flushs();
+        gets(strAux);
+        flushs();
+        e.nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+        strcpy(e.nomeencontro, strAux);
+    }
+
+    erro = 0;
 
     // Dia do encontro
     while (erro != 1)
     {
         limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
         printf("dia do encontro:\n");
         scanf("%d", &e.dataencontro.dia);
         printf("\nMês do encontro:\n");
@@ -2233,6 +2267,7 @@ SEncontro cadastraEncontro(int num)
     while (erro != 1)
     {
         limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
         printf("\nQual amigo deseja adicionar no encontro?\n");
         listaNomesAmigo();
         scanf("%d", &op);
@@ -2243,29 +2278,58 @@ SEncontro cadastraEncontro(int num)
         }
         else
         {
-            e.amigoencontro = e.enumamigos == 0 ? (char **)malloc(sizeof(char *)) : (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
-            if (e.amigoencontro == NULL)
+            int amigoDuplicado = 0;
+            for (int i = 0; i < e.enumamigos; i++)
             {
-                mensagemErro(-4);
-                break;
+                if (strcmp(e.amigoencontro[i], GAmigo[op - 1].nome) == 0)
+                {
+                    amigoDuplicado = 1;
+                    break;
+                }
             }
 
-            e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
-            if (e.amigoencontro[e.enumamigos] == NULL)
+            if (amigoDuplicado)
             {
-                mensagemErro(-4);
-                break;
+                printf("\nEsse amigo ja foi adicionado ao encontro.\n");
+                printf("Selecione outro amigo.\n");
             }
+            else
+            {
+                e.amigoencontro = e.enumamigos == 0 ? (char **)malloc(sizeof(char *)) : (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
+                if (e.amigoencontro == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
 
-            strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
-            e.enumamigos++;
+                e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+                if (e.amigoencontro[e.enumamigos] == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
 
-            printf("\n\nAmigo adicionado no encontro!\n");
-            printf("\nSelecionar mais um amigo?\n1. Sim\n2. Não\n");
-            scanf("%d", &op);
+                strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
+                e.enumamigos++;
 
-            erro = op == 1 ? 0 : op == 2 ? 1
-                                         : (mensagemErro(-1), 0);
+                printf("\nAmigo adicionado no encontro!\n");
+
+                printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
+                scanf("%d", &op);
+
+                if (op == 1)
+                {
+                    erro = 0;
+                }
+                else if (op == 2)
+                {
+                    erro = 1;
+                }
+                else
+                {
+                    mensagemErro(-1);
+                }
+            }
         }
     }
     erro = 0;
@@ -2274,6 +2338,7 @@ SEncontro cadastraEncontro(int num)
     while (erro != 1)
     {
         limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
         printf("Qual é o local do encontro?\n");
         listaNomesLocal();
         scanf("%d", &op);
@@ -2300,6 +2365,7 @@ SEncontro cadastraEncontro(int num)
     while (erro != 1)
     {
         limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
         printf("Qual é a categoria do encontro?\n");
         listaNomesCategoria();
         scanf("%d", &op);
@@ -2326,6 +2392,7 @@ SEncontro cadastraEncontro(int num)
     while (erro != 1)
     {
         limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
         printf("Digite a hora do encontro (HH MM): ");
         scanf("%d %d", &e.horaencontro.hora, &e.horaencontro.minuto);
 
