@@ -48,7 +48,7 @@ typedef struct
     SData dataencontro;
     SHora horaencontro;
     SLocal localencontro;
-    SAmigo *amigoencontro;
+    char **amigoencontro;
     int enumamigos;
     char *categoriaencontro;
     char *nomeencontro;
@@ -2186,19 +2186,23 @@ SEncontro cadastraEncontro(int num)
 
             if (GEncontro[NEncontro].enumamigos == 0)
             {
-                GEncontro[NEncontro].amigoencontro = (SAmigo *)malloc(1 * sizeof(SAmigo));
+                e.amigoencontro = (char **)malloc(sizeof(char *));
             }
-            else if (GEncontro[NEncontro].enumamigos > 0)
+            else
             {
-                GEncontro[NEncontro].amigoencontro = (SAmigo *)realloc(GEncontro[NEncontro].amigoencontro, (Namigo + 1) * sizeof(SAmigo));
+                e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
             }
+
+            e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+            strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
 
             GEncontro[NEncontro].enumamigos++;
 
             printf("\n\nAmigo Adicionado no encontro!\n");
-            
+
             printf("\nSelecionar mais um amigo?\n1. Sim\n2. Não\n");
             scanf("%d", &op);
+
             if (op == 1)
             {
                 erro = 0;
