@@ -150,7 +150,7 @@ void opcao_menu(int op)
         if (_NumMusica >= 0)
         {
             salvarArquivo();
-        } 
+        }
     }
 }
 
@@ -463,7 +463,7 @@ void salvarArquivo()
 {
     int i, j;
     FILE *pArq;
-    
+
     // abrir arquivo
     pArq = fopen("musicaBD.txt", "w");
 
@@ -1064,7 +1064,7 @@ void adicionarEstilo(int faixa)
     char strAux[100];
     printf("\nNovo Estilo: ");
     gets(strAux);
-    
+
     _PlayList[faixa].estilo = (char **)realloc(_PlayList[faixa].estilo, (_PlayList[faixa].numEstilo + 1) * sizeof(char *));
 
     if (!_PlayList[faixa].estilo)

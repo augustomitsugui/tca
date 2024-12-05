@@ -1107,7 +1107,6 @@ SAmigo cadastraAmigo(int num)
                     erro = 2;
                     break;
                 }
-                
             }
         }
 
@@ -2197,23 +2196,20 @@ SEncontro cadastraEncontro(int num)
             GEncontro[NEncontro].enumamigos++;
 
             printf("\n\nAmigo Adicionado no encontro!\n");
-
-            while (erro != 1)
+            
+            printf("\nSelecionar mais um amigo?\n1. Sim\n2. Não\n");
+            scanf("%d", &op);
+            if (op == 1)
             {
-                printf("\nSelecionar mais um amigo?\n1. Sim\n2. Não\n");
-                scanf("%d", &op);
-                if (op == 1)
-                {
-                    erro = 0;
-                }
-                else if (op == 2)
-                {
-                    erro = 1;
-                }
-                else
-                {
-                    mensagemErro(-1);
-                }
+                erro = 0;
+            }
+            else if (op == 2)
+            {
+                erro = 1;
+            }
+            else
+            {
+                mensagemErro(-1);
             }
         }
     }
