@@ -147,6 +147,9 @@ void imprimeEncontro(SEncontro e, int enc);
 void listaNomesEncontros();
 void listaTodosEncontros();
 
+void editaEncontro();
+void switchEncontro();
+
 // main e aux
 
 int main()
@@ -897,7 +900,7 @@ void imprimeEncontro(SEncontro e, int enc)
 
     for (int i = 0; i < e.enumamigos; i++)
     {
-        printf("[%s]; ", e.amigoencontro[i]);
+        printf("%s; ", e.amigoencontro[i]);
     }
 
     printf("\nLocal: %s\n", e.localencontro);
@@ -905,9 +908,9 @@ void imprimeEncontro(SEncontro e, int enc)
     printf(" %02d /", e.dataencontro.dia);
     printf(" %02d /", e.dataencontro.mes);
     printf(" %04d ]\n", e.dataencontro.ano);
-
     printf("Categoria: %s\n", e.categoriaencontro);
     printf("Hora: [%02i : %02i]\n", e.horaencontro.hora, e.horaencontro.minuto);
+    printf("Descrição: \n[ %s ]\n", e.categoriaencontro);
 }
 
 void listaTodosEncontros()
@@ -1381,6 +1384,18 @@ SEncontro cadastraEncontro(int num)
             pause();
             erro = 1;
         }
+    }
+
+    // descrição do encontro
+    while (erro != 1)
+    {
+        printf("Digite a descriçao do encontro: ");
+        flushs();
+        gets(strAux);
+        flushs();
+        e.descricao = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+        strcpy(e.descricao, strAux);
+        erro = 1;
     }
 
     limparTela();
@@ -2461,3 +2476,297 @@ void mensagemErro(int erro)
 }
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+void editaEncontro()
+{
+    int auxEdita = 1;
+
+    while (auxEdita)
+    {
+        int op = 0;
+        if (NEncontro == 0)
+        {
+            limparTela();
+            printf("Não há encontros disponíveis para editar! Adicione um Encontro!\n");
+            pause();
+            return;
+        }
+
+        limparTela();
+        printf("Que encontro você deseja editar?\n\n");
+
+        listaNomesEncontros();
+
+        while (op < 1 || op > NEncontro)
+        {
+            printf("Escolha um encontro: ");
+            scanf("%d", &op);
+            if (op < 1 || op > NEncontro)
+            {
+                op = -1;
+                mensagemErro(op);
+            }
+        }
+        limparTela();
+
+        imprimeEncontro(GEncontro[op - 1], op - 1);
+
+        int enc = op;
+
+        printf("\n\nO que você deseja editar?\n");
+        printf("1. Nome\n");
+        printf("2. Amigos\n");
+        printf("3. Local\n");
+        printf("4. Categoria\n");
+        printf("5. Data\n");
+        printf("6. Hora\n");
+        printf("7. Descricao\n");
+        printf("8. Voltar\n");
+        op = 0;
+        printf("Insira sua opção:\n");
+        scanf("%d", &op);
+
+        if (op > 7 || op < 1)
+        {
+            op = -1;
+            mensagemErro(op);
+        }
+        if (op == 7)
+        {
+            limparTela();
+            return;
+        }
+        limparTela();
+        switchEncontro(op, enc - 1);
+
+        auxEdita = desejaAlterar();
+    }
+}
+
+void switchEncontro(int op, int encontro)
+{
+    char strAux[100];
+    int opaux = 0, auxdata = 0, auxhora;
+    char opc;
+
+    switch (op)
+    {
+    case 1: // nome
+
+        printf("Alterar [ %s ]: ", GEncontro[encontro].nomeencontro);
+        flushs();
+        gets(strAux);
+        flushs();
+
+        printf("Deseja realmente alterar o nome para '%s'? (S/N): ", strAux);
+        flushs();
+        scanf("%c", &opc);
+        if (opc == 'S' || opc == 's')
+        {
+            GEncontro[encontro].nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(GEncontro[encontro].nomeencontro, strAux);
+            printf("Nome alterado com sucesso!\n");
+        }
+        else
+        {
+            printf("Alteração cancelada.\n");
+        }
+        break;
+
+    case 2: // amigo
+
+        // excluiAmigoEncontro();
+
+    case 3: // local
+
+        printf("Alterar [ %s ]\n", GEncontro[encontro].localencontro);
+
+        int erro = 0;
+
+        while (erro != 1)
+        {
+            printf("Qual é o novo local do encontro?\n");
+            listaNomesLocal();
+            scanf("%d", &op);
+
+            if (op <= 0 || op > Nlocal)
+            {
+                mensagemErro(-1);
+            }
+            else
+            {
+                GEncontro[encontro].localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
+                if (GEncontro[encontro].localencontro == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+                strcpy(GEncontro[encontro].localencontro, GLocal[op - 1].nomelocal);
+                erro = 1;
+            }
+        }
+
+    case 4: // categoria
+
+        printf("Alterar [ %s ]:\n", GEncontro[encontro].categoriaencontro);
+
+        erro = 0;
+
+        while (erro != 1)
+        {
+            printf("Qual é a nova categoria do encontro?\n");
+            listaNomesCategoria();
+            scanf("%d", &op);
+
+            if (op <= 0 || op > NCat)
+            {
+                mensagemErro(-1);
+            }
+            else
+            {
+                GEncontro[encontro].categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
+                if (GEncontro[encontro].categoriaencontro == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+                strcpy(GEncontro[encontro].categoriaencontro, GCategoria[op - 1].nomecat);
+                erro = 1;
+            }
+        }
+
+    case 5: // data do encontro
+        while (opaux < 1 || opaux > 3)
+        {
+            limparTela();
+            printf("O que deseja editar na data?\n");
+            printf("1. Dia\n2. Mês\n3. Ano\nEscolha: ");
+            scanf("%d", &opaux);
+            if (opaux < 1 || opaux > 3)
+            {
+                mensagemErro(-1);
+            }
+        }
+
+        printf("Insira o novo valor: ");
+        scanf("%d", &auxdata);
+
+        printf("\n");
+        switch (opaux)
+        {
+        case 1:
+            printf("Deseja realmente alterar o dia para %02d? (S/N): ", auxdata);
+            break;
+        case 2:
+            printf("Deseja realmente alterar o mês para %02d? (S/N): ", auxdata);
+            break;
+        case 3:
+            printf("Deseja realmente alterar o ano para %d? (S/N): ", auxdata);
+            break;
+        }
+        flushs();
+        scanf("%c", &opc);
+        if (opc == 'S' || opc == 's')
+        {
+            switch (opaux)
+            {
+            case 1:
+                GEncontro[encontro].dataencontro.dia = auxdata;
+                break;
+            case 2:
+                GEncontro[encontro].dataencontro.mes = auxdata;
+                break;
+            case 3:
+                GEncontro[encontro].dataencontro.ano = auxdata;
+                break;
+            }
+            printf("Data do encontro alterada com sucesso!\n");
+        }
+        else
+        {
+            printf("Alteração cancelada.\n");
+        }
+        break;
+
+    case 6:
+        while (opaux < 1 || opaux > 3)
+        {
+            limparTela();
+            printf("O que deseja editar na hora?\n");
+            printf("1. hora\n2. minuto\n\nEscolha: ");
+            scanf("%d", &opaux);
+            if (opaux < 1 || opaux > 2)
+            {
+                mensagemErro(-1);
+            }
+        }
+
+        printf("Insira o novo valor: ");
+        scanf("%d", &auxhora);
+
+        printf("\n");
+        switch (opaux)
+        {
+        case 1:
+            printf("Deseja realmente alterar o horario para %02d? (S/N): ", auxhora);
+            break;
+        case 2:
+            printf("Deseja realmente alterar o minuto para %02d? (S/N): ", auxhora);
+            break;
+        }
+
+        flushs();
+
+        scanf("%c", &opc);
+        if (opc == 'S' || opc == 's')
+        {
+            switch (opaux)
+            {
+            case 1:
+                GEncontro[encontro].horaencontro.hora = auxhora;
+                break;
+            case 2:
+                GEncontro[encontro].horaencontro.minuto = auxhora;
+                break;
+            }
+            printf("Hora do encontro alterada com sucesso!\n");
+        }
+        else
+        {
+            printf("Alteração cancelada.\n");
+        }
+        break;
+
+    case 7:
+        printf("Alterar [ %s ]: ", GEncontro[encontro].descricao);
+        flushs();
+        gets(strAux);
+        flushs();
+
+        printf("Deseja realmente alterar a descricao para '%s'? (S/N): ", strAux);
+        flushs();
+        scanf("%c", &opc);
+        if (opc == 'S' || opc == 's')
+        {
+            GEncontro[encontro].descricao = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(GEncontro[encontro].descricao, strAux);
+            printf("Descricao alterada com sucesso!\n");
+        }
+        else
+        {
+            printf("Alteração cancelada.\n");
+        }
+        break;
+
+    case 8:
+
+        printf("Voltando ao menu principal...\n");
+        break;
+
+    default:
+        mensagemErro(-1);
+        break;
+    }
+    printf("\n");
+    pause();
+}
