@@ -1223,10 +1223,13 @@ SEncontro cadastraEncontro(int num)
         printf("***CRIANDO ENCONTRO***\n\n");
         printf("dia do encontro:\n");
         scanf("%d", &e.dataencontro.dia);
+        flushs();
         printf("\nMês do encontro:\n");
         scanf("%d", &e.dataencontro.mes);
+        flushs();
         printf("\nAno do encontro:\n");
         scanf("%d", &e.dataencontro.ano);
+        flushs();
 
         erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
 
@@ -1369,8 +1372,8 @@ SEncontro cadastraEncontro(int num)
     {
         limparTela();
         printf("***CRIANDO ENCONTRO***\n\n");
-        printf("Digite a hora do encontro (HH MM): ");
-        scanf("%d %d", &e.horaencontro.hora, &e.horaencontro.minuto);
+        printf("Digite a hora do encontro em formato 24h (HH MM): ");
+        scanf("%2d%2d", &e.horaencontro.hora, &e.horaencontro.minuto);
 
         int verificadorhora = validaHora(e.horaencontro.hora, e.horaencontro.minuto);
 
