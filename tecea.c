@@ -566,7 +566,8 @@ void recuperaAmigo()
         {
             if ((c != '\n') && (c != '!'))
             {
-                str[i++] = c;
+                str[i] = c;
+                i++;
             }
             else if (c == '!' || c == '\n')
             {
@@ -574,6 +575,8 @@ void recuperaAmigo()
                 str[i] = '\0';
                 i = 0;
 
+
+                //nome
                 if (sep == 0)
                 {
                     if (Namigo == 0)
@@ -1478,6 +1481,7 @@ SAmigo cadastraAmigo(int num)
         else
         {
             a.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+
             if (a.nome == NULL)
             {
                 mensagemErro(-4);
@@ -2589,7 +2593,7 @@ void switchEncontro(int op, int encontro)
 
     case 2: // amigo
 
-        // excluiAmigoEncontro();
+        // editaAmigoEncontro();
 
     case 3: // local
 
