@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -340,6 +341,7 @@ int menuPrincipal()
         break;
     case 4:
         menuEncontro();
+        break;
     case 5:
         listaMenu();
     case 6:
@@ -625,6 +627,7 @@ void recuperaAmigo()
     }
     fclose(pArq);
 }
+
 void salvaAmigo()
 {
     FILE *pArq;
@@ -1068,6 +1071,7 @@ void listaAmigo()
     if (TodosOuUmLista() == 1)
     {
         listaTodosAmigos();
+        flushs();
     }
     else
     {
@@ -1077,6 +1081,7 @@ void listaAmigo()
         op--;
         limparTela();
         imprimeAmigo(GAmigo[op], op);
+        flushs();
     }
     pause();
     return;
@@ -1094,6 +1099,7 @@ void listaLocal()
     if (TodosOuUmLista() == 1)
     {
         listaTodosLocais();
+        flushs();
     }
     else
     {
@@ -1102,6 +1108,7 @@ void listaLocal()
         scanf("%d", &op);
         op--;
         imprimeLocal(GLocal[op], op);
+        flushs();
     }
     pause();
     return;
@@ -1119,6 +1126,7 @@ void listaCat()
     if (TodosOuUmLista() == 1)
     {
         listaTodasCategorias();
+        flushs();
     }
 
     else
@@ -1128,6 +1136,7 @@ void listaCat()
         scanf("%d", &op);
         op--;
         imprimeCategoria(GCategoria[op], op);
+        flushs();
     }
 
     pause();
@@ -2082,6 +2091,7 @@ void switchLocal(int op, int Local)
         printf("Voltando ao menu principal...\n");
         printf("\n");
         pause();
+        break;
 
     default:
         mensagemErro(-1);
@@ -2187,6 +2197,7 @@ void switchCat(int op, int cat)
         printf("Voltando ao menu principal...\n");
         printf("\n");
         pause();
+        break;
 
     default:
         mensagemErro(-1);
@@ -2608,6 +2619,7 @@ void switchEncontro(int op, int encontro)
                 erro = 1;
             }
         }
+        break;
 
     case 4: // categoria
 
