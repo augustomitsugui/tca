@@ -233,12 +233,15 @@ int validaHora(int hora, int min)
 int desejaAlterar()
 {
 
+    limparTela();
     char opc = 0;
     do
     {
         limparTela();
         printf("Deseja alterar mais alguma coisa? (S/N)");
+        flushs();
         scanf(" %c", &opc);
+        flushs();
         if (opc == 'N' || opc == 'n')
         {
 
@@ -352,6 +355,7 @@ void menuAmigo()
 
 {
 
+    limparTela();
     int op = 0;
     while (op != 4)
     {
@@ -388,6 +392,7 @@ void menuLocal()
 
 {
 
+    limparTela();
     int op = 0;
     while (op != 4)
     {
@@ -424,34 +429,39 @@ void menuLocal()
 }
 void menuCategoria()
 {
-    limparTela();
-    printf("1. Adicionar Categoria\n");
-    printf("2. Editar Categoria\n");
-    printf("3. Excluir Categoria\n");
-    printf("4. Voltar\n");
 
     int op = 0;
-    printf("Insira sua opção:\n");
-    scanf("%d", &op);
+    while (op != 4)
+    {
+        limparTela();
+        printf("1. Adicionar Categoria\n");
+        printf("2. Editar Categoria\n");
+        printf("3. Excluir Categoria\n");
+        printf("4. Voltar\n");
 
-    if (op > 3 || op < 1)
-    {
-        op = -1;
-        mensagemErro(op);
-    }
-    switch (op)
-    {
-    case 1:
-        incluiCategoria();
-        break;
-    case 2:
-        editaCategoria();
-        break;
-    case 3:
-        excluiCat();
-        break;
-    case 4:
-        break;
+        int op = 0;
+        printf("Insira sua opção:\n");
+        scanf("%d", &op);
+
+        if (op > 3 || op < 1)
+        {
+            op = -1;
+            mensagemErro(op);
+        }
+        switch (op)
+        {
+        case 1:
+            incluiCategoria();
+            break;
+        case 2:
+            editaCategoria();
+            break;
+        case 3:
+            excluiCat();
+            break;
+        case 4:
+            break;
+        }
     }
 }
 void menuEncontro()
@@ -573,8 +583,7 @@ void recuperaAmigo()
                 str[i] = '\0';
                 i = 0;
 
-
-                //nome
+                // nome
                 if (sep == 0)
                 {
                     if (Namigo == 0)
@@ -1729,6 +1738,8 @@ void editaAmigo()
 
         auxEdita = desejaAlterar();
     }
+
+    limparTela();
 }
 void switchAmigo(int op, int amigo)
 {
@@ -2245,7 +2256,7 @@ void excluiAmigo()
     do
     {
         limparTela();
-        printf("Deseja mesmo excluir [ %s ]?\nEssa ação será I.RREVERSÍVEL.\n(tipo assim vc vai ter menos um pras suas festinhas e coisas ridiculas)\n(S/N)", GAmigo[amigo].nome);
+        printf("Deseja mesmo excluir [ %s ]?\nEssa ação será I.RREVERSÍVEL. (S/N)\n", GAmigo[amigo].nome);
         scanf(" %c", &opc);
         if (opc == 'N' || opc == 'n')
         {
@@ -2278,6 +2289,7 @@ void excluiAmigo()
 
             limparTela();
             printf("exclusao bem sucedida!");
+            pause();
             return;
         }
         else
