@@ -138,6 +138,7 @@ void listaNomesEncontros();
 void listaTodosEncontros();
 void editaEncontro();
 void switchEncontro();
+void ExcluiEncontro();
 void listaAmigosDoEncontro(SEncontro e);
 void menuEditaAmigoEncontro(int numemc, SEncontro e);
 
@@ -336,6 +337,7 @@ int menuPrincipal()
         break;
     case 5:
         listaMenu();
+        break;
     case 6:
         break;
     }
@@ -482,10 +484,9 @@ void menuEncontro()
         editaEncontro();
         break;
     case 3:
-        //  excluiEncontro();
+        excluiEncontro();
         break;
     case 4:
-        menuPrincipal();
         break;
     }
 }
