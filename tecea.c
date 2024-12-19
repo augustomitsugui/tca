@@ -175,7 +175,7 @@ int TodosOuUmLista()
     do
     {
         limparTela();
-        printf("\n\nDeseja listar todos ou apenas um específico?\n1. Todos\n2. Específico\n\n");
+        printf("Deseja listar todos ou apenas um específico?\n1. Todos\n2. Específico\n\n");
         scanf("%d", &op);
         if (op == 1)
         {
@@ -219,8 +219,6 @@ void pause()
     getchar();
 #endif
 }
-
-#include <stdio.h>
 
 // Função que valida a hora
 int validaHora(int hora, int min)
@@ -2544,12 +2542,12 @@ void editaEncontro()
         printf("Insira sua opção:\n");
         scanf("%d", &op);
 
-        if (op > 7 || op < 1)
+        if (op > 8 || op < 1)
         {
             op = -1;
             mensagemErro(op);
         }
-        if (op == 7)
+        if (op == 8)
         {
             limparTela();
             return;
@@ -2707,7 +2705,7 @@ void switchEncontro(int op, int encontro)
         }
         break;
 
-    case 6:
+    case 6: // hora
         while (opaux < 1 || opaux > 3)
         {
             limparTela();
