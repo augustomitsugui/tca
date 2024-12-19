@@ -103,6 +103,7 @@ void listaMenu();
 void menuLocal();
 void menuCategoria();
 void menuEncontro();
+void relaCat();
 // funcao pros amigos
 SAmigo cadastraAmigo(int num);
 void imprimeAmigo(SAmigo a, int num);
@@ -138,9 +139,10 @@ void listaNomesEncontros();
 void listaTodosEncontros();
 void editaEncontro();
 void switchEncontro();
-void ExcluiEncontro();
+void excluiEncontro();
 void listaAmigosDoEncontro(SEncontro e);
 void menuEditaAmigoEncontro(int numemc, SEncontro e);
+void listaEnc();
 
 // main e aux
 
@@ -522,9 +524,11 @@ void listaMenu()
         listaCat();
         break;
     case 4:
-        // listaTodosEncontros
+        listaEnc();
+        break;
     case 5:
-        // Relatorio por categoria (janta = 1 2, cinema = 4 5 6, escola = 3)
+        relaCat();
+        break;
     case 6:
         break;
     }
@@ -1428,7 +1432,7 @@ SEncontro cadastraEncontro(int num)
         printf("***CRIANDO ENCONTRO***\n\n");
         printf("\nQual amigo deseja adicionar no encontro?\n");
         listaNomesAmigo();
-        printf("%d. Voltar", Namigo + 1);
+        printf("%d. Voltar\n\n", Namigo + 1);
         scanf("%d", &op);
 
         if (op <= 0 || op > Namigo + 1)
@@ -1437,7 +1441,7 @@ SEncontro cadastraEncontro(int num)
         }
         else if (op == Namigo + 1)
         {
-            return;
+            break;
         }
         else
         {
@@ -1576,8 +1580,6 @@ SEncontro cadastraEncontro(int num)
         }
         else
         {
-            printf("\n\nHora Adicionada!!\n");
-            pause();
             erro = 1;
         }
     }
@@ -2934,6 +2936,81 @@ void excluiCat()
     } while (opc != 'S' || opc != 's' || opc != 'N' || opc != 'n');
 }
 
+void excluiEncontro()
+{
+    pause();
+    int op = 0, opaux = 0;
+    limparTela();
+
+    if (NEncontro == 0)
+    {
+        printf("Não há encontros! Adicione!\n");
+        pause();
+        return;
+    }
+    else
+    {
+        printf("Qual encontro você deseja exlcuir?");
+        listaNomesEncontros();
+        printf("%d. Voltar", NEncontro + 1);
+        scanf("%d", &op);
+
+        if (op < 1 || op > NEncontro + 1)
+        {
+            mensagemErro(-1);
+        }
+        else
+        {
+            if (op == NEncontro + 1)
+            {
+                return;
+            }
+            else
+            {
+                limparTela();
+                printf("Deseja mesmo excluir encontro [ %s ]?\n1. Sim\n2.Não\n", GEncontro[op - 1].nomeencontro);
+                scanf("%d", &opaux);
+
+                if (opaux != 1)
+                {
+                    printf("\n\nVocê escolheu voltar!");
+                    pause();
+                    return;
+                }
+                else
+                {
+                    limparTela();
+                    printf("Você escolheu [Sim]; Excluindo. . . ");
+
+                    if (NEncontro == 1)
+                    {
+                        free(GEncontro);
+                        GEncontro = NULL;
+                    }
+
+                    else
+                    {
+
+                        for (int i = op - 1; i < NEncontro - 1; i++)
+                        {
+                            GEncontro[i] = GEncontro[i + 1];
+                        }
+
+                        GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro - 1) * sizeof(SEncontro));
+                    }
+
+                    NEncontro--;
+
+                    limparTela();
+                    printf("exclusao bem sucedida!\n");
+                    pause();
+                    return;
+                }
+            }
+        }
+    }
+}
+
 // erros
 
 void mensagemErro(int erro)
@@ -2977,76 +3054,69 @@ void mensagemErro(int erro)
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-void excluiEncontro()
+void listaEnc()
 {
-
-    int op = 0, opaux = 0;
-    limparTela();
-
-    if (NEncontro == 0)
+    int op;
+    if (NEncontro < 1)
     {
-        printf("Não há encontros! Adicione!\n");
+        printf("não existe nada adicionado! adicione!!");
         pause();
         return;
     }
+
+    if (TodosOuUmLista() == 1)
+    {
+        listaTodosEncontros();
+        flushs();
+    }
+
     else
     {
-        printf("Qual encontro você deseja exlcuir?");
         listaNomesEncontros();
-        printf("%d. Voltar", NEncontro + 1);
+        printf("\nqual deles?\n");
+        scanf("%d", &op);
+        op--;
+        imprimeEncontro(GEncontro[op], op);
+        flushs();
+    }
 
-        if (op < 1 || op > NEncontro + 1)
+    pause();
+
+    return;
+}
+
+void relaCat()
+{
+
+    int cont[NCat];
+    limparTela();
+
+    if (NEncontro < 1)
+    {
+        printf("Nao ha encontros para fazer relatorio por categoria!\nAdicione!\n");
+        pause();
+        return;
+    }
+
+    for (int i = 0; i < NCat; i++)
+    {
+        cont[i] = 0;
+
+        for (int k = 0; k < NEncontro; k++)
         {
-            mensagemErro(-1);
-        }
-        else
-        {
-            if (op == NEncontro + 1)
+            if (strcmp(GCategoria[i].nomecat, GEncontro[k].categoriaencontro) == 0)
             {
-                return;
-            }
-            else
-            {
-                limparTela();
-                printf("Deseja mesmo excluir encontro [ %s ]?\n1. Sim\n2.Não\n");
-                scanf("%d", &opaux);
-
-                if (opaux != 1)
-                {
-                    printf("\n\nVocê escolheu voltar!");
-                    pause();
-                    return;
-                }
-                else
-                {
-                    limparTela();
-                    printf("Você escolheu [Sim]; Excluindo. . . ");
-
-                    if (NCat == 1)
-                    {
-                        free(GEncontro);
-                        GEncontro = NULL;
-                    }
-
-                    else
-                    {
-
-                        for (int i = op - 1; i < NEncontro - 1; i++)
-                        {
-                            GEncontro[i] = GEncontro[i + 1];
-                        }
-
-                        GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro - 1) * sizeof(SEncontro));
-                    }
-
-                    NEncontro--;
-
-                    limparTela();
-                    printf("exclusao bem sucedida!\n");
-                    pause();
-                    return;
-                }
+                cont[i]++;
             }
         }
     }
+    printf("\n");
+    
+    for (int i = 0; i < NCat; i++)
+    {
+        printf("%d. [ %s ]: %d encontros\n", i + 1, GCategoria[i].nomecat, cont[i]);
+    }
+
+    printf("\n");
+    pause();
 }
