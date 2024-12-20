@@ -160,7 +160,6 @@ int main()
 
     return 0;
 }
-
 int TodosOuUmLista()
 {
     int op = 0;
@@ -223,7 +222,6 @@ int validaHora(int hora, int min)
     }
     return 0;
 }
-
 int desejaAlterar()
 {
 
@@ -301,7 +299,6 @@ int validaData(int dd, int mm, int yy)
 }
 
 // menus
-
 int menuPrincipal()
 {
 
@@ -796,7 +793,6 @@ void recuperaAmigo()
     }
     fclose(pArq);
 }
-
 void salvaAmigo()
 {
     FILE *pArq;
@@ -1083,7 +1079,6 @@ void imprimeEncontro(SEncontro e, int enc)
     printf("Hora: [%02i : %02i]\n", e.horaencontro.hora, e.horaencontro.minuto);
     printf("Descrição: \n[ %s ]\n", e.descricao);
 }
-
 void listaTodosEncontros()
 {
     limparTela();
@@ -1317,6 +1312,72 @@ void listaCat()
     pause();
 
     return;
+}
+
+void listaEnc()
+{
+    int op;
+    if (NEncontro < 1)
+    {
+        printf("não existe nada adicionado! adicione!!");
+        pause();
+        return;
+    }
+
+    if (TodosOuUmLista() == 1)
+    {
+        listaTodosEncontros();
+        flushs();
+    }
+
+    else
+    {
+        listaNomesEncontros();
+        printf("\nqual deles?\n");
+        scanf("%d", &op);
+        op--;
+        imprimeEncontro(GEncontro[op], op);
+        flushs();
+    }
+
+    pause();
+
+    return;
+}
+void relaCat()
+{
+
+    int cont[NCat];
+    limparTela();
+
+    if (NEncontro < 1)
+    {
+        printf("Nao ha encontros para fazer relatorio por categoria!\nAdicione!\n");
+        pause();
+        return;
+    }
+
+    for (int i = 0; i < NCat; i++)
+    {
+        cont[i] = 0;
+
+        for (int k = 0; k < NEncontro; k++)
+        {
+            if (strcmp(GCategoria[i].nomecat, GEncontro[k].categoriaencontro) == 0)
+            {
+                cont[i]++;
+            }
+        }
+    }
+    printf("\n");
+
+    for (int i = 0; i < NCat; i++)
+    {
+        printf("%d. [ %s ]: %d encontros\n", i + 1, GCategoria[i].nomecat, cont[i]);
+    }
+
+    printf("\n");
+    pause();
 }
 
 // cadastro
@@ -1854,7 +1915,6 @@ SCategoria cadastraCategoria(int num)
 }
 
 // editores
-
 void editaAmigo()
 {
     int auxEdita = 1;
@@ -2697,7 +2757,6 @@ void switchEncontro(int op, int encontro)
 }
 
 // lixeira
-
 void excluiAmigo()
 {
 
@@ -2935,7 +2994,6 @@ void excluiCat()
 
     } while (opc != 'S' || opc != 's' || opc != 'N' || opc != 'n');
 }
-
 void excluiEncontro()
 {
     pause();
@@ -3012,7 +3070,6 @@ void excluiEncontro()
 }
 
 // erros
-
 void mensagemErro(int erro)
 {
     limparTela();
@@ -3053,70 +3110,3 @@ void mensagemErro(int erro)
 }
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-void listaEnc()
-{
-    int op;
-    if (NEncontro < 1)
-    {
-        printf("não existe nada adicionado! adicione!!");
-        pause();
-        return;
-    }
-
-    if (TodosOuUmLista() == 1)
-    {
-        listaTodosEncontros();
-        flushs();
-    }
-
-    else
-    {
-        listaNomesEncontros();
-        printf("\nqual deles?\n");
-        scanf("%d", &op);
-        op--;
-        imprimeEncontro(GEncontro[op], op);
-        flushs();
-    }
-
-    pause();
-
-    return;
-}
-
-void relaCat()
-{
-
-    int cont[NCat];
-    limparTela();
-
-    if (NEncontro < 1)
-    {
-        printf("Nao ha encontros para fazer relatorio por categoria!\nAdicione!\n");
-        pause();
-        return;
-    }
-
-    for (int i = 0; i < NCat; i++)
-    {
-        cont[i] = 0;
-
-        for (int k = 0; k < NEncontro; k++)
-        {
-            if (strcmp(GCategoria[i].nomecat, GEncontro[k].categoriaencontro) == 0)
-            {
-                cont[i]++;
-            }
-        }
-    }
-    printf("\n");
-    
-    for (int i = 0; i < NCat; i++)
-    {
-        printf("%d. [ %s ]: %d encontros\n", i + 1, GCategoria[i].nomecat, cont[i]);
-    }
-
-    printf("\n");
-    pause();
-}
