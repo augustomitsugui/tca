@@ -316,7 +316,7 @@ int menuPrincipal()
     printf("6. Sair\n");
 
     int op = 0;
-    printf("Insira sua opção:\n");
+    printf("Insira sua opcao:\n");
     scanf("%d", &op);
 
     if (op > 6 || op < 1)
@@ -362,7 +362,7 @@ void menuAmigo()
         printf("3. Excluir Amigo\n");
         printf("4. Voltar\n");
 
-        printf("Insira sua opção:\n");
+        printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
         if (op > 4 || op < 1)
@@ -399,7 +399,7 @@ void menuLocal()
         printf("3. Excluir Local\n");
         printf("4. Voltar\n");
 
-        printf("Insira sua opção:\n");
+        printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
         if (op > 4 || op < 1)
@@ -434,7 +434,7 @@ void menuCategoria()
         printf("2. Editar Categoria\n");
         printf("3. Excluir Categoria\n");
         printf("4. Voltar\n");
-        printf("Insira sua opção: ");
+        printf("Insira sua opcao: ");
         scanf("%d", &op);
 
         if (op > 4 || op < 1)
@@ -468,7 +468,7 @@ void menuEncontro()
     printf("4. Voltar\n");
 
     int op = 0;
-    printf("Insira sua opção:\n");
+    printf("Insira sua opcao:\n");
     scanf("%d", &op);
 
     if (op > 4 || op < 1)
@@ -503,7 +503,7 @@ void listaMenu()
     printf("6. Voltar\n");
 
     int op = 0;
-    printf("Insira sua opção:\n");
+    printf("Insira sua opcao:\n");
     scanf("%d", &op);
 
     if (op > 6 || op < 1)
@@ -541,7 +541,7 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
     while (saida)
     {
         limparTela();
-        printf("O que você deseja alterar nos amigos do encontro %d?\n", numenc);
+        printf("O que você deseja alterar nos amigos do encontro [ %d ]?\n", numenc + 1);
         printf("1. Adicionar Amigo\n");
         printf("2. Remover Amigo\n");
         printf("3. Voltar\n");
@@ -552,71 +552,83 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
         switch (op)
         {
         case 1:
-            while (1)
+            while (saida)
             {
-                limparTela();
-                printf("\nQual amigo deseja adicionar no encontro?\n");
-                listaNomesAmigo();
-                scanf("%d", &op);
 
-                if (op <= 0 || op > Namigo)
+                limparTela();
+
+                if (e.enumamigos == Namigo)
                 {
-                    mensagemErro(-1);
+                    printf("não há mais amigos a adicionar!\n");
+                    saida = 0;
                 }
                 else
                 {
-                    int amigoDuplicado = 0;
-                    for (int i = 0; i < e.enumamigos; i++)
-                    {
-                        if (strcmp(e.amigoencontro[i], GAmigo[op - 1].nome) == 0)
-                        {
-                            amigoDuplicado = 1;
-                            break;
-                        }
-                    }
+                    printf("\nQual amigo deseja adicionar no encontro?\n");
+                    listaNomesAmigo();
+                    scanf("%d", &op);
 
-                    if (amigoDuplicado)
+                    if (op <= 0 || op > Namigo)
                     {
-                        printf("\nEsse amigo já foi adicionado ao encontro.\n");
-                        printf("Selecione outro amigo.\n");
-                        pause();
+                        mensagemErro(-1);
                     }
                     else
                     {
-                        if (e.enumamigos == 0)
+                        int amigoDuplicado = 0;
+
+                        for (int i = 0; i < e.enumamigos; i++)
                         {
-                            e.amigoencontro = (char **)malloc(sizeof(char *));
+                            if (strcmp(e.amigoencontro[i], GAmigo[op - 1].nome) == 0)
+                            {
+                                amigoDuplicado = 1;
+                                break;
+                            }
                         }
+
+                        if (amigoDuplicado)
+                        {
+                            printf("\nEsse amigo já foi adicionado ao encontro.\n");
+                            printf("Selecione outro amigo.\n");
+                            pause();
+                        }
+
                         else
                         {
-                            e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
-                        }
+                            if (e.enumamigos == 0)
+                            {
+                                e.amigoencontro = (char **)malloc(sizeof(char *));
+                            }
+                            else
+                            {
+                                e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
+                            }
 
-                        if (e.amigoencontro == NULL)
-                        {
-                            mensagemErro(-4);
-                            break;
-                        }
+                            if (e.amigoencontro == NULL)
+                            {
+                                mensagemErro(-4);
+                                break;
+                            }
 
-                        e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
-                        if (e.amigoencontro[e.enumamigos] == NULL)
-                        {
-                            mensagemErro(-4);
-                            break;
-                        }
+                            e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
+                            if (e.amigoencontro[e.enumamigos] == NULL)
+                            {
+                                mensagemErro(-4);
+                                break;
+                            }
 
-                        strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
-                        e.enumamigos++;
+                            strcpy(e.amigoencontro[e.enumamigos], GAmigo[op - 1].nome);
+                            e.enumamigos++;
 
-                        printf("\nAmigo adicionado no encontro!\n");
+                            printf("\nAmigo adicionado no encontro!\n");
 
-                        printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
-                        scanf("%d", &op);
+                            printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
+                            scanf("%d", &op);
 
-                        if (op != 1)
-                        {
-                            saida = 0;
-                            break;
+                            if (op != 1)
+                            {
+                                saida = 0;
+                                break;
+                            }
                         }
                     }
                 }
@@ -634,7 +646,6 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
                     printf("Não é possivel remover amigo do encontro. Existe apenas 1 amigo nesse encontro.\n");
                     return;
                 }
-
                 else
                 {
                     printf("\nQual amigo deseja remover do encontro?\n");
@@ -679,11 +690,13 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
                             }
 
                             printf("Exclusão bem sucedida!\n");
+                            pause();
+                            saida = 0;
                             break;
                         }
                         else
                         {
-                            printf("Opção inválida. Por favor, escolha 'S' para Sim ou 'N' para Não.\n");
+                            printf("opcao inválida. Por favor, escolha 'S' para Sim ou 'N' para Não.\n");
                         }
                     }
                 }
@@ -1160,7 +1173,6 @@ void recuperaEncontro()
         fclose(pArq);
     }
 }
-
 void salvaEncontro()
 {
 
@@ -1536,7 +1548,7 @@ void relaCat()
             }
         }
     }
-    printf("\n");
+    printf("Relatório de quantos encontros há em cada categoria existente:\n\n");
 
     for (int i = 0; i < NCat; i++)
     {
@@ -1629,30 +1641,6 @@ SEncontro cadastraEncontro(int num)
 
     erro = 0;
 
-    // Dia do encontro
-    while (erro != 1)
-    {
-        limparTela();
-        printf("***CRIANDO ENCONTRO***\n\n");
-        printf("dia do encontro:\n");
-        scanf("%d", &e.dataencontro.dia);
-        flushs();
-        printf("\nMês do encontro:\n");
-        scanf("%d", &e.dataencontro.mes);
-        flushs();
-        printf("\nAno do encontro:\n");
-        scanf("%d", &e.dataencontro.ano);
-        flushs();
-
-        erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
-
-        if (erro != 1)
-        {
-            mensagemErro(erro);
-        }
-    }
-    erro = 0;
-
     // amg no encontro
     e.enumamigos = 0;
     while (erro != 1)
@@ -1661,20 +1649,17 @@ SEncontro cadastraEncontro(int num)
         printf("***CRIANDO ENCONTRO***\n\n");
         printf("\nQual amigo deseja adicionar no encontro?\n");
         listaNomesAmigo();
-        printf("%d. Voltar\n\n", Namigo + 1);
+        printf("\n");
         scanf("%d", &op);
 
-        if (op <= 0 || op > Namigo + 1)
+        if (op <= 0 || op > Namigo)
         {
             mensagemErro(-1);
-        }
-        else if (op == Namigo + 1)
-        {
-            break;
         }
         else
         {
             int amigoDuplicado = 0;
+
             for (int i = 0; i < e.enumamigos; i++)
             {
                 if (strcmp(e.amigoencontro[i], GAmigo[op - 1].nome) == 0)
@@ -1690,6 +1675,7 @@ SEncontro cadastraEncontro(int num)
                 printf("Selecione outro amigo.\n");
                 pause();
             }
+
             else
             {
                 if (e.enumamigos == 0)
@@ -1719,7 +1705,6 @@ SEncontro cadastraEncontro(int num)
                 e.enumamigos++;
 
                 printf("\nAmigo adicionado no encontro!\n");
-                pause();
                 if (Namigo > 1)
                 {
                     limparTela();
@@ -1741,9 +1726,34 @@ SEncontro cadastraEncontro(int num)
                 }
                 else
                 {
+                    printf("Nao ha mais amigos para adicionar!\n");
+                    pause();
                     erro = 1;
                 }
             }
+        }
+    }
+    erro = 0;
+    // Dia do encontro
+    while (erro != 1)
+    {
+        limparTela();
+        printf("***CRIANDO ENCONTRO***\n\n");
+        printf("dia do encontro:\n");
+        scanf("%d", &e.dataencontro.dia);
+        flushs();
+        printf("\nMês do encontro:\n");
+        scanf("%d", &e.dataencontro.mes);
+        flushs();
+        printf("\nAno do encontro:\n");
+        scanf("%d", &e.dataencontro.ano);
+        flushs();
+
+        erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
+
+        if (erro != 1)
+        {
+            mensagemErro(erro);
         }
     }
     erro = 0;
@@ -2170,6 +2180,20 @@ void editaAmigo()
                 op = -1;
                 mensagemErro(op);
             }
+            else
+            {
+                for (int i = 0; i < Namigo; i++)
+                {
+                    for (int k = 0; k < GEncontro[i].enumamigos; k++)
+                    {
+                        if (strcmp(GEncontro[i].amigoencontro[k], GAmigo[op - 1].nome) == 0)
+                        {
+                            mensagemErro(-6);
+                            return;
+                        }
+                    }
+                }
+            }
         }
         limparTela();
 
@@ -2185,7 +2209,7 @@ void editaAmigo()
         printf("5. Data Nasc\n");
         printf("6. Voltar\n");
         op = 0;
-        printf("Insira sua opção:\n");
+        printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
         if (op > 6 || op < 1)
@@ -2393,6 +2417,17 @@ void editaLocal()
                 op = -1;
                 mensagemErro(op);
             }
+            else
+            {
+                for (int i = 0; i < Nlocal; i++)
+                {
+                    if (strcmp(GEncontro[i].localencontro, GLocal[op - 1].nomelocal) == 0)
+                    {
+                        mensagemErro(-6);
+                        return;
+                    }
+                }
+            }
         }
 
         limparTela();
@@ -2410,7 +2445,7 @@ void editaLocal()
         printf("6. Número\n");
         printf("7. Voltar\n");
         op = 0;
-        printf("Insira sua opção:\n");
+        printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
         if (op > 7 || op < 1)
@@ -2594,20 +2629,29 @@ void editaCategoria()
             pause();
             return;
         }
-
-        limparTela();
-        printf("Qual você deseja editar?\n\n");
-
-        listaNomesCategoria();
-
         while (op < 1 || op > NCat)
         {
+            limparTela();
+            printf("Qual você deseja editar?\n\n");
+
+            listaNomesCategoria();
             printf("Escolha um para editar: ");
             scanf("%d", &op);
             if (op < 1 || op > NCat)
             {
                 op = -1;
                 mensagemErro(op);
+            }
+            else
+            {
+                for (int i = 0; i < NCat; i++)
+                {
+                    if (strcmp(GEncontro[i].categoriaencontro, GCategoria[op - 1].nomecat) == 0)
+                    {
+                        mensagemErro(-6);
+                        return;
+                    }
+                }
             }
         }
 
@@ -2622,7 +2666,7 @@ void editaCategoria()
         printf("2. \n\n");
         op = 0;
 
-        printf("Insira sua opção:\n");
+        printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
         if (op > 2 || op < 1)
@@ -2733,7 +2777,7 @@ void editaEncontro()
         printf("7. Descricao\n");
         printf("8. Voltar\n");
         op = 0;
-        printf("Insira sua opção:\n");
+        printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
         if (op > 8 || op < 1)
@@ -2986,6 +3030,7 @@ void switchEncontro(int op, int encontro)
 void excluiAmigo()
 {
 
+    limparTela();
     if (Namigo < 1)
     {
         limparTela();
@@ -3001,10 +3046,24 @@ void excluiAmigo()
     int op = 0;
     while (op < 1 || op > Namigo)
     {
-        printf("Digite um número entre 1 e %d (por favor não avacalhe): ", Namigo);
+        printf("Digite um número entre 1 e %d : ", Namigo);
         if (scanf("%d", &op) != 1)
         {
             mensagemErro(-1);
+        }
+        else
+        {
+            for (int i = 0; i < Namigo; i++)
+            {
+                for (int k = 0; k < GEncontro[i].enumamigos; k++)
+                {
+                    if (strcmp(GEncontro[i].amigoencontro[k], GAmigo[op - 1].nome) == 0)
+                    {
+                        mensagemErro(-6);
+                        return;
+                    }
+                }
+            }
         }
     }
 
@@ -3064,6 +3123,7 @@ void excluiAmigo()
 void excluiLocal()
 {
 
+    limparTela();
     if (Nlocal < 1)
     {
         limparTela();
@@ -3074,15 +3134,26 @@ void excluiLocal()
 
     listaNomesLocal();
 
-    printf("\n\nQual deseja excluir? [ 1 - %d ]\n", Nlocal);
+    printf("\nQual deseja excluir? [ 1 - %d ]\n", Nlocal);
 
     int op = 0;
     while (op < 1 || op > Nlocal)
     {
-        printf("Digite um número entre 1 e %d (por favor não avacalhe): ", Nlocal);
+        printf("Digite um número entre 1 e %d : ", Nlocal);
         if (scanf("%d", &op) != 1)
         {
             mensagemErro(-1);
+        }
+        else
+        {
+            for (int i = 0; i < Nlocal; i++)
+            {
+                if (strcmp(GEncontro[i].localencontro, GLocal[op - 1].nomelocal) == 0)
+                {
+                    mensagemErro(-6);
+                    return;
+                }
+            }
         }
     }
 
@@ -3143,7 +3214,7 @@ void excluiLocal()
 }
 void excluiCat()
 {
-
+    limparTela();
     if (NCat < 1)
     {
         limparTela();
@@ -3159,10 +3230,21 @@ void excluiCat()
     int op = 0;
     while (op < 1 || op > NCat)
     {
-        printf("Digite um número entre 1 e %d (por favor não avacalhe): ", NCat);
+        printf("Digite um número entre 1 e %d : ", NCat);
         if (scanf("%d", &op) != 1)
         {
             mensagemErro(-1);
+        }
+        else
+        {
+            for (int i = 0; i < NCat; i++)
+            {
+                if (strcmp(GEncontro[i].categoriaencontro, GCategoria[op - 1].nomecat) == 0)
+                {
+                    mensagemErro(-6);
+                    return;
+                }
+            }
         }
     }
 
@@ -3222,7 +3304,6 @@ void excluiCat()
 }
 void excluiEncontro()
 {
-    pause();
     int op = 0, opaux = 0;
     limparTela();
 
@@ -3263,9 +3344,6 @@ void excluiEncontro()
                 }
                 else
                 {
-                    limparTela();
-                    printf("Você escolheu [Sim]; Excluindo. . . ");
-
                     if (NEncontro == 1)
                     {
                         free(GEncontro);
@@ -3307,7 +3385,7 @@ void mensagemErro(int erro)
         limparTela();
         break;
     case -1:
-        printf("ERRO! Opção inválida!\n");
+        printf("ERRO! opcao inválida!\n");
         pause();
         limparTela();
         break;
@@ -3332,6 +3410,11 @@ void mensagemErro(int erro)
         pause();
         limparTela();
         break;
+    case -6:
+        printf("ERRO! Não é possível executar a ação, pois está vinculado a um encontro!\n");
+        printf("Remova do encontro antes de fazer qualquer coisa.\n");
+        pause();
+        limparTela();
     }
 }
 
