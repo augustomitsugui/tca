@@ -172,6 +172,7 @@ int TodosOuUmLista()
         limparTela();
         printf("Deseja listar todos ou apenas um específico?\n1. Todos\n2. Específico\n\n");
         scanf("%d", &op);
+        limparTela();
         if (op == 1)
         {
             return 1;
@@ -433,12 +434,10 @@ void menuCategoria()
         printf("2. Editar Categoria\n");
         printf("3. Excluir Categoria\n");
         printf("4. Voltar\n");
-
-        int op = 0;
-        printf("Insira sua opção:\n");
+        printf("Insira sua opção: ");
         scanf("%d", &op);
 
-        if (op > 3 || op < 1)
+        if (op > 4 || op < 1)
         {
             op = -1;
             mensagemErro(op);
@@ -1062,7 +1061,6 @@ void limpaLocal()
 }
 
 void recuperaEncontro()
-
 {
     int i, sep = 0;
     char str[200], c;
@@ -1072,14 +1070,12 @@ void recuperaEncontro()
     if (pArq)
     {
         i = 0;
-
         while ((c = fgetc(pArq)) != EOF)
         {
             if ((c != '\n') && (c != '!') && (c != '$'))
             {
                 str[i++] = c;
             }
-
             else if (c == '!' || c == '\n' || c == '$')
             {
                 str[i] = '\0';
@@ -1087,7 +1083,6 @@ void recuperaEncontro()
 
                 if (sep == 0) // nome encontro
                 {
-
                     if (NEncontro == 0)
                     {
                         GEncontro = (SEncontro *)malloc(1 * sizeof(SEncontro));
@@ -1102,7 +1097,7 @@ void recuperaEncontro()
                     GEncontro[NEncontro].enumamigos = 0;
                 }
 
-                if ((sep == 1) || (c == '$')) // amigos
+                if ((sep == 1) && (c == '$')) // amigos
                 {
                     if (GEncontro[NEncontro].enumamigos == 0)
                     {
@@ -1116,7 +1111,6 @@ void recuperaEncontro()
                     GEncontro[NEncontro].amigoencontro[GEncontro[NEncontro].enumamigos] = (char *)malloc((strlen(str) + 1) * sizeof(char));
                     strcpy(GEncontro[NEncontro].amigoencontro[GEncontro[NEncontro].enumamigos], str);
                     GEncontro[NEncontro].enumamigos++;
-                    sep = 0;
                 }
                 else if (sep == 2) // local encontro
                 {
@@ -1154,19 +1148,17 @@ void recuperaEncontro()
                     strcpy(GEncontro[NEncontro].descricao, str);
                 }
 
-                puts(str);
-                pause();
                 sep++;
 
                 if (c == '\n')
                 {
-                    NEncontro++; // adciiona o número de locais após processar uma linha
-                    sep = 0;     // redeta p a próxima linha
+                    NEncontro++; // adiciona o número de locais após processar uma linha
+                    sep = 0;     // reseta para a próxima linha
                 }
             }
         }
+        fclose(pArq);
     }
-    fclose(pArq);
 }
 
 void salvaEncontro()
@@ -1224,26 +1216,34 @@ void limpaEncontro()
 
 void imprimeEncontro(SEncontro e, int enc)
 {
-    printf("\nEncontro %d\n", enc + 1);
+    printf("\n******************************\n");
+    printf("Encontro %d\n", enc + 1);
+    printf("Nome do Encontro: %s\n", e.nomeencontro);
+    printf("----------------------------\n");
 
-    printf("%s\n", e.nomeencontro);
     printf("Amigos no encontro: %d\n", e.enumamigos);
     printf("Amigos: ");
-
-    for (int i = 0; i < e.enumamigos; i++)
+    if (e.enumamigos > 0)
     {
-        printf("%s; ", e.amigoencontro[i]);
+        for (int i = 0; i < e.enumamigos; i++)
+        {
+            printf("%s", e.amigoencontro[i]);
+            if (i < e.enumamigos - 1)
+            {
+                printf("; ");
+            }
+        }
     }
+    printf("\n----------------------------\n");
 
-    printf("\nLocal: %s\n", e.localencontro);
-    printf("Data: [ ");
-    printf(" %02d /", e.dataencontro.dia);
-    printf(" %02d /", e.dataencontro.mes);
-    printf(" %04d ]\n", e.dataencontro.ano);
+    printf("Local: %s\n", e.localencontro);
+    printf("Data: [ %02d / %02d / %04d ]\n", e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
     printf("Categoria: %s\n", e.categoriaencontro);
     printf("Hora: [%02i : %02i]\n", e.horaencontro.hora, e.horaencontro.minuto);
-    printf("Descrição: \n[ %s ]\n", e.descricao);
+    printf("Descricao: [ %s ]\n", e.descricao);
+    printf("\n******************************\n");
 }
+
 void listaTodosEncontros()
 {
     limparTela();
@@ -1442,6 +1442,7 @@ void listaLocal()
         printf("\nqual deles?");
         scanf("%d", &op);
         op--;
+        limparTela();
         imprimeLocal(GLocal[op], op);
         flushs();
     }
@@ -1470,6 +1471,7 @@ void listaCat()
         printf("\nqual deles?\n");
         scanf("%d", &op);
         op--;
+        limparTela();
         imprimeCategoria(GCategoria[op], op);
         flushs();
     }
@@ -1549,6 +1551,7 @@ void relaCat()
 
 void incluiEncontro()
 {
+    limparTela();
     if (Namigo == 0 || Nlocal == 0 || NCat == 0)
     {
         printf("Você ainda não possui ");
@@ -1585,7 +1588,8 @@ void incluiEncontro()
             printf(".\n");
         }
 
-        printf("\nVolte ao menu e crie as opções necessárias!");
+        printf("\nVolte ao menu e crie as opções necessárias!\n");
+        pause();
     }
 
     else
@@ -1716,20 +1720,29 @@ SEncontro cadastraEncontro(int num)
                 e.enumamigos++;
 
                 printf("\nAmigo adicionado no encontro!\n");
-                printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
-                scanf("%d", &op);
+                pause();
+                if (Namigo > 1)
+                {
+                    limparTela();
+                    printf("Selecionar mais um amigo?\n1. Sim\n2. Nao\n");
+                    scanf("%d", &op);
 
-                if (op == 1)
-                {
-                    erro = 0;
-                }
-                else if (op == 2)
-                {
-                    erro = 1;
+                    if (op == 1)
+                    {
+                        erro = 0;
+                    }
+                    else if (op == 2)
+                    {
+                        erro = 1;
+                    }
+                    else
+                    {
+                        mensagemErro(-1);
+                    }
                 }
                 else
                 {
-                    mensagemErro(-1);
+                    erro = 1;
                 }
             }
         }
