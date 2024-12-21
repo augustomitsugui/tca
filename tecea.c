@@ -1548,7 +1548,6 @@ void relaCat()
 }
 
 // cadastro
-
 void incluiEncontro()
 {
     limparTela();
@@ -1989,15 +1988,40 @@ void incluiLocal()
 }
 SLocal cadastraLocal(int num)
 {
-
     SLocal l;
     char strAux[100];
+    int erro = 1;
 
-    limparTela();
-    printf("nome do local: ");
-    flushs();
-    gets(strAux);
-    flushs();
+    while (erro)
+    {
+        limparTela();
+        printf("nome do local: ");
+        flushs();
+        gets(strAux);
+        flushs();
+
+        if (Nlocal > 0)
+        {
+            for (int i = 0; i < Nlocal; i++)
+            {
+                if (strcmp(GLocal[i].nomelocal, strAux) == 0)
+                {
+                    printf("\nLocal com este nome ja existe!\n");
+                    pause();
+                    erro = 1;
+                }
+                else
+                {
+                    erro = 0;
+                }
+            }
+        }
+        else
+        {
+            erro = 0;
+        }
+    }
+
     l.nomelocal = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
     strcpy(l.nomelocal, strAux);
     flushs();
@@ -2052,7 +2076,7 @@ SLocal cadastraLocal(int num)
     imprimeLocal(l, num);
     pause();
 
-    return l; // parece um numero 1 mas é um l
+    return l; // Retorna o local cadastrado
 }
 
 void incluiCategoria()
@@ -2071,15 +2095,39 @@ void incluiCategoria()
 }
 SCategoria cadastraCategoria(int num)
 {
-
     SCategoria c;
     char strAux[100];
+    int erro = 1;
+    while (erro)
+    {
 
-    limparTela();
-    printf("nome da categoria: ");
-    flushs();
-    gets(strAux);
-    flushs();
+        limparTela();
+        printf("nome da categoria: ");
+        flushs();
+        gets(strAux);
+        flushs();
+
+        if (NCat > 0)
+        {
+            for (int i = 0; i < NCat; i++)
+            {
+                if (strcmp(GCategoria[i].nomecat, strAux) == 0)
+                {
+                    printf("\nCategoria com este nome ja existe!\n");
+                    pause();
+                    erro = 1;
+                }
+                else
+                {
+                    erro = 0;
+                }
+            }
+        }
+        else
+        {
+            erro = 0;
+        }
+    }
     c.nomecat = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
     strcpy(c.nomecat, strAux);
     flushs();
@@ -2571,7 +2619,7 @@ void editaCategoria()
 
         printf("\n\nO que você deseja editar?\n");
         printf("1. Nome\n");
-        printf("2. Voltar\n");
+        printf("2. \n\n");
         op = 0;
 
         printf("Insira sua opção:\n");
@@ -3188,7 +3236,7 @@ void excluiEncontro()
     {
         printf("Qual encontro você deseja exlcuir?");
         listaNomesEncontros();
-        printf("%d. Voltar", NEncontro + 1);
+        printf("%d. Voltar\n\n", NEncontro + 1);
         scanf("%d", &op);
 
         if (op < 1 || op > NEncontro + 1)

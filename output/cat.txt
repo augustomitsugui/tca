@@ -1,5 +1,1 @@
-jantar!
-cinema!
-piquenique!
-reuniao!
-estudar!
+categria!
