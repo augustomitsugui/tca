@@ -143,6 +143,9 @@ void excluiEncontro();
 void listaAmigosDoEncontro(SEncontro e);
 void menuEditaAmigoEncontro(int numemc, SEncontro e);
 void listaEnc();
+void recuperaEncontro();
+void salvaEncontro();
+void limpaEncontro();
 
 // main e aux
 
@@ -700,6 +703,7 @@ void recuperaDado()
     recuperaAmigo();
     recuperaLocal();
     recuperaCat();
+    recuperaEncontro();
 }
 void salvaDado()
 {
@@ -707,12 +711,14 @@ void salvaDado()
     salvaAmigo();
     salvaLocal();
     salvaCat();
+    salvaEncontro();
 }
 void limpaDado()
 {
     limpaAmigo();
     limpaLocal();
     limpaCat();
+    limpaEncontro();
 }
 
 void recuperaAmigo()
@@ -1052,6 +1058,165 @@ void limpaLocal()
         }
 
         free(GLocal);
+    }
+}
+
+void recuperaEncontro()
+
+{
+    int i, sep = 0;
+    char str[200], c;
+
+    FILE *pArq;
+    pArq = fopen("encontros.txt", "r");
+    if (pArq)
+    {
+        i = 0;
+
+        while ((c = fgetc(pArq)) != EOF)
+        {
+            if ((c != '\n') && (c != '!') && (c != '$'))
+            {
+                str[i++] = c;
+            }
+
+            else if (c == '!' || c == '\n' || c == '$')
+            {
+                str[i] = '\0';
+                i = 0;
+
+                if (sep == 0) // nome encontro
+                {
+
+                    if (NEncontro == 0)
+                    {
+                        GEncontro = (SEncontro *)malloc(1 * sizeof(SEncontro));
+                    }
+                    else
+                    {
+                        GEncontro = (SEncontro *)realloc(GEncontro, (NEncontro + 1) * sizeof(SEncontro));
+                    }
+
+                    GEncontro[NEncontro].nomeencontro = (char *)malloc((strlen(str) + 1) * sizeof(char));
+                    strcpy(GEncontro[NEncontro].nomeencontro, str);
+                    GEncontro[NEncontro].enumamigos = 0;
+                }
+
+                if ((sep == 1) || (c == '$')) // amigos
+                {
+                    if (GEncontro[NEncontro].enumamigos == 0)
+                    {
+                        GEncontro[NEncontro].amigoencontro = (char **)malloc(sizeof(char *));
+                    }
+                    else
+                    {
+                        GEncontro[NEncontro].amigoencontro = (char **)realloc(GEncontro[NEncontro].amigoencontro, (GEncontro[NEncontro].enumamigos + 1) * sizeof(char *));
+                    }
+
+                    GEncontro[NEncontro].amigoencontro[GEncontro[NEncontro].enumamigos] = (char *)malloc((strlen(str) + 1) * sizeof(char));
+                    strcpy(GEncontro[NEncontro].amigoencontro[GEncontro[NEncontro].enumamigos], str);
+                    GEncontro[NEncontro].enumamigos++;
+                    sep = 0;
+                }
+                else if (sep == 2) // local encontro
+                {
+                    GEncontro[NEncontro].localencontro = (char *)malloc((strlen(str) + 1) * sizeof(char));
+                    strcpy(GEncontro[NEncontro].localencontro, str);
+                }
+                else if (sep == 3) // dia
+                {
+                    GEncontro[NEncontro].dataencontro.dia = atoi(str);
+                }
+                else if (sep == 4) // mes
+                {
+                    GEncontro[NEncontro].dataencontro.mes = atoi(str);
+                }
+                else if (sep == 5) // ano
+                {
+                    GEncontro[NEncontro].dataencontro.ano = atoi(str);
+                }
+                else if (sep == 6) // cat
+                {
+                    GEncontro[NEncontro].categoriaencontro = (char *)malloc((strlen(str) + 1) * sizeof(char));
+                    strcpy(GEncontro[NEncontro].categoriaencontro, str);
+                }
+                else if (sep == 7) // hora
+                {
+                    GEncontro[NEncontro].horaencontro.hora = atoi(str);
+                }
+                else if (sep == 8) // min
+                {
+                    GEncontro[NEncontro].horaencontro.minuto = atoi(str);
+                }
+                else if (sep == 9) // descr
+                {
+                    GEncontro[NEncontro].descricao = (char *)malloc((strlen(str) + 1) * sizeof(char));
+                    strcpy(GEncontro[NEncontro].descricao, str);
+                }
+
+                puts(str);
+                pause();
+                sep++;
+
+                if (c == '\n')
+                {
+                    NEncontro++; // adciiona o número de locais após processar uma linha
+                    sep = 0;     // redeta p a próxima linha
+                }
+            }
+        }
+    }
+    fclose(pArq);
+}
+
+void salvaEncontro()
+{
+
+    FILE *pArq;
+
+    pArq = fopen("encontros.txt", "w");
+
+    if (pArq == NULL)
+    {
+        printf("ERRO: Nao foi possivel salvar as informaceos");
+        exit(0);
+    }
+
+    for (int i = 0; i < NEncontro; i++)
+    {
+        fprintf(pArq, "%s!", GEncontro[i].nomeencontro);
+        for (int k = 0; k < GEncontro[i].enumamigos; k++)
+        {
+            fprintf(pArq, "%s$", GEncontro[i].amigoencontro[k]);
+        }
+        fprintf(pArq, "%s!", GEncontro[i].localencontro);
+        fprintf(pArq, "%02d!", GEncontro[i].dataencontro.dia);
+        fprintf(pArq, "%02d!", GEncontro[i].dataencontro.mes);
+        fprintf(pArq, "%04d!", GEncontro[i].dataencontro.ano);
+        fprintf(pArq, "%s!", GEncontro[i].categoriaencontro);
+        fprintf(pArq, "%02i!%02i!", GEncontro[i].horaencontro.hora, GEncontro[i].horaencontro.minuto);
+        fprintf(pArq, "%s!", GEncontro[i].descricao);
+        fprintf(pArq, "%c", '\n');
+    }
+}
+void limpaEncontro()
+{
+    if (NEncontro == 0)
+    {
+        return;
+    }
+
+    else
+    {
+        for (int i = 0; i < NEncontro; i++)
+        {
+            free(GEncontro[i].nomeencontro);
+            free(GEncontro[i].localencontro);
+            free(GEncontro[i].categoriaencontro);
+            free(GEncontro[i].descricao);
+        }
+
+        free(GEncontro);
     }
 }
 
