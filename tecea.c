@@ -71,7 +71,7 @@ int Nlocal = 0;
 SCategoria *GCategoria;
 int NCat = 0;
 
-// funcao auxiliar
+// A U X I L I A R
 void limparTela();
 void flushs();
 int desejaAlterar();
@@ -79,7 +79,8 @@ int validaData(int dd, int mm, int yy);
 void mensagemErro(int erro);
 void pause();
 int validaHora(int hora, int min);
-// funcao de memoria e arquivo
+
+// A R Q U I V O
 void salvaAmigo();
 void limpaAmigo();
 void recuperaAmigo();
@@ -92,11 +93,13 @@ void recuperaCat();
 void recuperaDado();
 void salvaDado();
 void limpaDado();
-// impressoras auxiliares
+
+// I M P R E S S O R A S   A U X I L I A R E S
 void listaNomesAmigo();
 void listaNomesLocal();
 void listaNomesCategoria();
-// funcoes de menu
+
+// M E N U
 int menuPrincipal();
 void menuAmigo();
 void listaMenu();
@@ -104,7 +107,8 @@ void menuLocal();
 void menuCategoria();
 void menuEncontro();
 void relaCat();
-// funcao pros amigos
+
+// A M I G O
 SAmigo cadastraAmigo(int num);
 void imprimeAmigo(SAmigo a, int num);
 void listaTodosAmigos();
@@ -113,7 +117,8 @@ void switchAmigo(int op, int amigo);
 void incluiAmigo();
 void excluiAmigo();
 void listaAmigo();
-// funcao pros locais
+
+// L O C A L
 SLocal cadastraLocal(int num);
 void incluiLocal();
 void imprimeLocal(SLocal a, int num);
@@ -122,7 +127,8 @@ void editaLocal();
 void switchLocal(int op, int local);
 void excluiLocal();
 void listaLocal();
-// funcao para as caetgorias
+
+// C A T E G O R I A 
 void listaCat();
 void incluiCategoria();
 SCategoria cadastraCategoria(int num);
@@ -131,7 +137,8 @@ void listaTodasCategorias();
 void editaCategoria();
 void switchCat(int op, int cat);
 void excluiCat();
-// funcoes pra encontro
+
+// E N C O N T R O
 void incluiEncontro();
 SEncontro cadastraEncontro(int num);
 void imprimeEncontro(SEncontro e, int enc);
@@ -147,8 +154,15 @@ void recuperaEncontro();
 void salvaEncontro();
 void limpaEncontro();
 
-// main e aux
 
+
+    
+
+
+//       C        O        D        I        G        O            -----------------------------------------------------------
+
+
+// M A I N   E   A U X
 int main()
 {
 
@@ -217,7 +231,7 @@ void pause()
 #endif
 }
 
-// Funcao que valida a hora
+// F U N C I O N A M E N T O   G E R A L
 int validaHora(int hora, int min)
 {
     if (hora < 0 || hora >= 24 || min < 0 || min >= 60)
@@ -301,8 +315,51 @@ int validaData(int dd, int mm, int yy)
         return -2;
     }
 }
+void mensagemErro(int erro)
+{
+    limparTela();
+    switch (erro)
+    {
+    default:
+        printf("ERRO!. . . ");
+        pause();
+        limparTela();
+        break;
+    case -1:
+        printf("ERRO! opcao invalida!\n");
+        pause();
+        limparTela();
+        break;
 
-// menus
+    case -2:
+        printf("ERRO! Data Invalida!\n");
+        pause();
+        limparTela();
+        break;
+    case -3:
+        printf("\nERRO! Ja existe um amigo com esse nome!\n");
+        pause();
+        limparTela();
+        break;
+    case -4:
+        printf("Erro ao alocar memória\n");
+        pause();
+        limparTela();
+        break;
+    case -5:
+        printf("Hora invalida!!\n");
+        pause();
+        limparTela();
+        break;
+    case -6:
+        printf("ERRO! Nao e possivel executar a acao, pois esta vinculado a um encontro!\n");
+        printf("Remova do encontro antes de fazer qualquer coisa.\n");
+        pause();
+        limparTela();
+    }
+}
+
+// M E N U S
 int menuPrincipal()
 {
 
@@ -700,7 +757,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
     return e;
 }
 
-// funcoes de recuperacao salvamento e limpeza
+// A R Q U I V O
 void recuperaDado()
 {
     recuperaAmigo();
@@ -723,7 +780,6 @@ void limpaDado()
     limpaCat();
     limpaEncontro();
 }
-
 void recuperaAmigo()
 {
     int i, sep = 0;
@@ -848,7 +904,6 @@ void limpaAmigo()
         free(GAmigo);
     }
 }
-
 void recuperaCat()
 {
     int i;
@@ -935,7 +990,6 @@ void limpaCat()
         free(GCategoria);
     }
 }
-
 void recuperaLocal()
 {
     int i, sep = 0;
@@ -1063,7 +1117,6 @@ void limpaLocal()
         free(GLocal);
     }
 }
-
 void recuperaEncontro()
 {
     int i, sep = 0;
@@ -1221,8 +1274,7 @@ void limpaEncontro()
     }
 }
 
-// impressoras
-
+// I M P R E S S O R A S
 void imprimeEncontro(SEncontro e, int enc)
 {
     printf("\n******************************\n");
@@ -1252,7 +1304,6 @@ void imprimeEncontro(SEncontro e, int enc)
     printf("Descricao: [ %s ]\n", e.descricao);
     printf("\n******************************\n");
 }
-
 void listaTodosEncontros()
 {
     limparTela();
@@ -1277,7 +1328,6 @@ void listaAmigosDoEncontro(SEncontro e)
     }
     printf("\n");
 }
-
 void imprimeAmigo(SAmigo a, int num)
 {
     printf("Amigo [%d]\n", num + 1);
@@ -1303,7 +1353,6 @@ void listaTodosAmigos()
         }
     }
 }
-
 void imprimeLocal(SLocal a, int num)
 
 {
@@ -1333,7 +1382,6 @@ void listaTodosLocais()
         }
     }
 }
-
 void imprimeCategoria(SCategoria c, int num)
 {
     printf("%d.   ", num + 1);
@@ -1356,7 +1404,6 @@ void listaTodasCategorias()
         printf("\n");
     }
 }
-
 void listaNomesEncontros()
 {
     printf("Encontros:\n\n");
@@ -1366,7 +1413,6 @@ void listaNomesEncontros()
         printf("%d. [%s]\n", i + 1, GEncontro[i].nomeencontro);
     }
 }
-
 void listaNomesAmigo()
 {
     if (Namigo < 1)
@@ -1403,7 +1449,6 @@ void listaNomesCategoria()
         printf("%d. [%s]\n", i + 1, GCategoria[i].nomecat);
     }
 }
-
 void listaAmigo()
 {
     int op;
@@ -1491,7 +1536,6 @@ void listaCat()
 
     return;
 }
-
 void listaEnc()
 {
     int op;
@@ -1582,7 +1626,7 @@ void relaCat()
     pause();
 }
 
-// cadastro
+// C A D A S T R O
 void incluiEncontro()
 {
     limparTela();
@@ -1876,7 +1920,6 @@ SEncontro cadastraEncontro(int num)
     pause();
     return e;
 }
-
 void incluiAmigo()
 {
     if (Namigo == 0)
@@ -2004,7 +2047,6 @@ SAmigo cadastraAmigo(int num)
 
     return a;
 }
-
 void incluiLocal()
 {
     if (Nlocal == 0)
@@ -2111,7 +2153,6 @@ SLocal cadastraLocal(int num)
 
     return l; // Retorna o local cadastrado
 }
-
 void incluiCategoria()
 {
     if (NCat == 0)
@@ -2173,7 +2214,7 @@ SCategoria cadastraCategoria(int num)
     return c;
 }
 
-// editores
+// E D I T O R E S 
 void editaAmigo()
 {
     int auxEdita = 1;
@@ -2417,7 +2458,6 @@ void switchAmigo(int op, int amigo)
     printf("\n");
     pause();
 }
-
 void editaLocal()
 {
     int auxEdita = 1;
@@ -2646,7 +2686,6 @@ void switchLocal(int op, int Local)
     pause();
     return;
 }
-
 void editaCategoria()
 {
     int auxEdita = 1;
@@ -2763,7 +2802,6 @@ void switchCat(int op, int cat)
     pause();
     return;
 }
-
 void editaEncontro()
 {
     int auxEdita = 1;
@@ -3082,7 +3120,7 @@ void switchEncontro(int op, int encontro)
     pause();
 }
 
-// lixeira
+// L I X E I R A 
 void excluiAmigo()
 {
 
@@ -3421,50 +3459,3 @@ void excluiEncontro()
         }
     }
 }
-
-// erros
-void mensagemErro(int erro)
-{
-    limparTela();
-    switch (erro)
-    {
-    default:
-        printf("ERRO!. . . ");
-        pause();
-        limparTela();
-        break;
-    case -1:
-        printf("ERRO! opcao invalida!\n");
-        pause();
-        limparTela();
-        break;
-
-    case -2:
-        printf("ERRO! Data Invalida!\n");
-        pause();
-        limparTela();
-        break;
-    case -3:
-        printf("\nERRO! Ja existe um amigo com esse nome!\n");
-        pause();
-        limparTela();
-        break;
-    case -4:
-        printf("Erro ao alocar memória\n");
-        pause();
-        limparTela();
-        break;
-    case -5:
-        printf("Hora invalida!!\n");
-        pause();
-        limparTela();
-        break;
-    case -6:
-        printf("ERRO! Nao e possivel executar a acao, pois esta vinculado a um encontro!\n");
-        printf("Remova do encontro antes de fazer qualquer coisa.\n");
-        pause();
-        limparTela();
-    }
-}
-
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
