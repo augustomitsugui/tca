@@ -141,7 +141,7 @@ void editaEncontro();
 void switchEncontro();
 void excluiEncontro();
 void listaAmigosDoEncontro(SEncontro e);
-void menuEditaAmigoEncontro(int numemc, SEncontro e);
+SEncontro menuEditaAmigoEncontro(int numemc, SEncontro e);
 void listaEnc();
 void recuperaEncontro();
 void salvaEncontro();
@@ -532,7 +532,7 @@ void listaMenu()
         break;
     }
 }
-void menuEditaAmigoEncontro(int numenc, SEncontro e)
+SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
 {
     int op = 0, amigop = 0;
     char opc;
@@ -541,7 +541,7 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
     while (saida)
     {
         limparTela();
-        printf("O que você deseja alterar nos amigos do encontro [ %d ]?\n", numenc + 1);
+        printf("O que voce deseja alterar nos amigos do encontro [ %d ]?\n", numenc + 1);
         printf("1. Adicionar Amigo\n");
         printf("2. Remover Amigo\n");
         printf("3. Voltar\n");
@@ -554,7 +554,6 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
         case 1:
             while (saida)
             {
-
                 limparTela();
 
                 if (e.enumamigos == Namigo)
@@ -594,15 +593,7 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
 
                         else
                         {
-                            if (e.enumamigos == 0)
-                            {
-                                e.amigoencontro = (char **)malloc(sizeof(char *));
-                            }
-                            else
-                            {
-                                e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
-                            }
-
+                            e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
                             if (e.amigoencontro == NULL)
                             {
                                 mensagemErro(-4);
@@ -636,15 +627,14 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
             break;
 
         case 2:
-            while (1)
+            while (saida)
             {
-
                 limparTela();
 
                 if (e.enumamigos == 1)
                 {
                     printf("Nao e possivel remover amigo do encontro. Existe apenas 1 amigo nesse encontro.\n");
-                    return;
+                    return e;
                 }
                 else
                 {
@@ -664,7 +654,7 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
 
                         if (opc == 'N' || opc == 'n')
                         {
-                            printf("Você escolheu [N]; Voltando...\n");
+                            printf("Voce escolheu [N]; Voltando...\n");
                             pause();
                             break;
                         }
@@ -690,23 +680,24 @@ void menuEditaAmigoEncontro(int numenc, SEncontro e)
                             }
 
                             printf("Exclusao bem sucedida!\n");
-                            pause();
                             saida = 0;
                             break;
                         }
                         else
                         {
-                            printf("opcao invalida. Por favor, escolha 'S' para Sim ou 'N' para Nao.\n");
+                            printf("Opcao invalida. Por favor, escolha 'S' para Sim ou 'N' para Nao.\n");
                         }
                     }
                 }
             }
+            break;
 
         case 3:
             saida = 0;
             break;
         }
     }
+    return e;
 }
 
 // funcoes de recuperacao salvamento e limpeza
@@ -1110,6 +1101,10 @@ void recuperaEncontro()
                     GEncontro[NEncontro].enumamigos = 0;
                 }
 
+                if (sep == 1 && c != '$')
+                {
+                    sep = 2;
+                }
                 if ((sep == 1) && (c == '$')) // amigos
                 {
                     if (GEncontro[NEncontro].enumamigos == 0)
@@ -1124,7 +1119,9 @@ void recuperaEncontro()
                     GEncontro[NEncontro].amigoencontro[GEncontro[NEncontro].enumamigos] = (char *)malloc((strlen(str) + 1) * sizeof(char));
                     strcpy(GEncontro[NEncontro].amigoencontro[GEncontro[NEncontro].enumamigos], str);
                     GEncontro[NEncontro].enumamigos++;
+                    sep = 0;
                 }
+
                 else if (sep == 2) // local encontro
                 {
                     GEncontro[NEncontro].localencontro = (char *)malloc((strlen(str) + 1) * sizeof(char));
@@ -1339,8 +1336,8 @@ void listaTodosLocais()
 
 void imprimeCategoria(SCategoria c, int num)
 {
-    printf("\nCategoria [%d]\n", num + 1);
-    printf("Nome: %s\n\n", c.nomecat);
+    printf("%d.   ", num + 1);
+    printf("%s\n", c.nomecat);
 }
 void listaTodasCategorias()
 {
@@ -1355,6 +1352,8 @@ void listaTodasCategorias()
         {
             imprimeCategoria(GCategoria[i], i);
         }
+
+        printf("\n");
     }
 }
 
@@ -1525,8 +1524,8 @@ void listaEnc()
 }
 void relaCat()
 {
-
     int cont[NCat];
+    int indices[NCat];
     limparTela();
 
     if (NEncontro < 1)
@@ -1536,10 +1535,16 @@ void relaCat()
         return;
     }
 
+    printf("Relatorio por categoria:\n\n");
+
     for (int i = 0; i < NCat; i++)
     {
         cont[i] = 0;
+        indices[i] = i;
+    }
 
+    for (int i = 0; i < NCat; i++)
+    {
         for (int k = 0; k < NEncontro; k++)
         {
             if (strcmp(GCategoria[i].nomecat, GEncontro[k].categoriaencontro) == 0)
@@ -1548,14 +1553,32 @@ void relaCat()
             }
         }
     }
-    printf("Relatório de quantos encontros ha em cada categoria existente:\n\n");
+
+    for (int i = 0; i < NCat - 1; i++)
+    {
+        for (int j = i + 1; j < NCat; j++)
+        {
+            if (cont[indices[i]] < cont[indices[j]])
+            {
+                int temp = indices[i];
+                indices[i] = indices[j];
+                indices[j] = temp;
+            }
+        }
+    } // ordena sem alterar a ordem do meu gcategoria rs
+
+    printf("=========================================\n");
+    printf("| Num  | Categoria           | Encontros |\n");
+    printf("=========================================\n");
 
     for (int i = 0; i < NCat; i++)
     {
-        printf("%d. [ %s ]: %d encontros\n", i + 1, GCategoria[i].nomecat, cont[i]);
+        int idx = indices[i];
+        printf("| %-4d | %-20s | %-9d |\n", i + 1, GCategoria[idx].nomecat, cont[idx]);
     }
 
-    printf("\n");
+    printf("=========================================\n");
+
     pause();
 }
 
@@ -2672,7 +2695,7 @@ void editaCategoria()
 
         printf("\n\nO que você deseja editar?\n");
         printf("1. Nome\n");
-        printf("2. \n\n");
+        printf("2. Voltar\n\n");
         op = 0;
 
         printf("Insira sua opcao:\n");
@@ -2839,7 +2862,7 @@ void switchEncontro(int op, int encontro)
 
     case 2: // amigo
 
-        menuEditaAmigoEncontro(encontro, GEncontro[encontro]);
+        GEncontro[encontro] = menuEditaAmigoEncontro(encontro, GEncontro[encontro]);
         break;
 
     case 3: // local
