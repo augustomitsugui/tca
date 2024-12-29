@@ -60,6 +60,7 @@ typedef struct
 // aperte Ctrl K + Ctrl J para maximizar (desdobrar) TODAS as funcões
 // - dicas do otavio augusto :))
 
+// problema na hora de adicionar coiso q tem mesmo nome verificar isso em TODOS (encontro, amigo, categoria e local!!!!!!!)
 SAmigo *GAmigo;
 int Namigo = 0;
 SEncontro *GEncontro;
@@ -242,12 +243,10 @@ int validaHora(int hora, int min)
 int desejaAlterar()
 {
 
-    limparTela();
     char opc = 0;
     do
     {
-        limparTela();
-        printf("Deseja alterar mais alguma coisa? (S/N)");
+        printf("\nDeseja alterar mais alguma coisa? (S/N): ");
         flushs();
         scanf(" %c", &opc);
         flushs();
@@ -642,8 +641,9 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                 }
                 else
                 {
-                    printf("\nQual amigo deseja adicionar no encontro?\n");
+
                     listaNomesAmigo();
+                    printf("\nInsira amigo para adicionar ao encontro: ");
                     scanf("%d", &op);
 
                     if (op <= 0 || op > Namigo)
@@ -717,9 +717,8 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                 }
                 else
                 {
-                    printf("\nQual amigo deseja remover do encontro?\n\n");
                     listaAmigosDoEncontro(e);
-                    printf("Insira opcao:  ");
+                    printf("\nInsira amigo para remover do encontro: ");
                     scanf("%d", &amigop);
 
                     if (amigop <= 0 || amigop > e.enumamigos)
@@ -1301,7 +1300,7 @@ void limpaEncontro()
 void imprimeEncontro(SEncontro e, int enc)
 {
     printf("+--------------------------------------------------+\n");
-    printf("|                  Encontro %-2d                     |\n", enc + 1);
+    printf("|                  Encontro %-2d                      |\n", enc + 1);
     printf("+--------------------------------------------------+\n");
     printf("| Nome: %-42s |\n", e.nomeencontro);
     printf("+--------------------------------------------------+\n");
@@ -1352,7 +1351,7 @@ void listaAmigosDoEncontro(SEncontro e)
 void imprimeAmigo(SAmigo a, int num)
 {
     printf("+--------------------------------------------------+\n");
-    printf("|                     Amigo [%d]                    |\n", num + 1);
+    printf("|                     Amigo [%02d]                   |\n", num + 1);
     printf("+--------------------------------------------------+\n");
     printf("| Nome: %-42s |\n", a.nome);
     printf("| Apelido: %-39s |\n", a.apelido);
@@ -1361,7 +1360,6 @@ void imprimeAmigo(SAmigo a, int num)
     printf("| Data de Nascimento: %02d / %02d / %04d               |\n", a.datanasc.dia, a.datanasc.mes, a.datanasc.ano);
     printf("+--------------------------------------------------+\n");
 }
-
 void listaTodosAmigos()
 {
     limparTela();
@@ -1388,10 +1386,9 @@ void imprimeLocal(SLocal a, int num)
     printf("| Cidade: %-40s |\n", a.local.cidade);
     printf("| Estado: %-40s |\n", a.local.estado);
     printf("| Logradouro: %-36s |\n", a.local.logradouro);
-    printf("| Numero: %-39s |\n", a.local.num);
+    printf("| Numero: %-40s |\n", a.local.num);
     printf("+--------------------------------------------------+\n");
 }
-
 void listaTodosLocais()
 {
     limparTela();
@@ -1411,14 +1408,12 @@ void listaTodosLocais()
         }
     }
 }
-
 void imprimeCategoria(SCategoria c, int num)
 {
     printf("+--------------------------------------------------+\n");
     printf("| %2d. %-45s|\n", num + 1, c.nomecat);
     printf("+--------------------------------------------------+\n");
 }
-
 void listaTodasCategorias()
 {
     limparTela();
@@ -1438,49 +1433,48 @@ void listaTodasCategorias()
 }
 void listaNomesEncontros()
 {
-    printf("+--------------------------------------------------+\n");
-    printf("|                  Lista de Encontros              |\n");
-    printf("+--------------------------------------------------+\n");
+    printf("+---------------------------------------------------+\n");
+    printf("|                  Lista de Encontros               |\n");
+    printf("+---------------------------------------------------+\n");
 
     for (int i = 0; i < NEncontro; i++)
     {
         printf("| %2d. %-45s |\n", i + 1, GEncontro[i].nomeencontro);
     }
 
-    printf("+--------------------------------------------------+\n\n");
+    printf("+---------------------------------------------------+\n\n");
 }
-void listaNomesAmigo()
-{
+void listaNomesAmigo(){
     if (Namigo < 1)
     {
         printf("nao existe nada adicionado! adicione!!");
         return;
     }
 
-    printf("+--------------------------------------------------+\n");
-    printf("|                      AMIGOS                      |\n");
-    printf("+--------------------------------------------------+\n");
+    printf("+---------------------------------------------------+\n");
+    printf("|                      AMIGOS                       |\n");
+    printf("+---------------------------------------------------+\n");
 
     for (int i = 0; i < Namigo; i++)
     {
-        printf("| %d. %-45s |\n", i + 1, GAmigo[i].nome);
+        printf("| %02d. %-45s |\n", i + 1, GAmigo[i].nome);
     }
 
-    printf("+--------------------------------------------------+\n");
+    printf("+---------------------------------------------------+\n");
     printf("\n");
 }
 void listaNomesLocal()
 {
-    printf("+--------------------------------------------------+\n");
-    printf("|                    Lista de Locais               |\n");
-    printf("+--------------------------------------------------+\n");
+    printf("+---------------------------------------------------+\n");
+    printf("|                    Lista de Locais                |\n");
+    printf("+---------------------------------------------------+\n");
 
     for (int i = 0; i < Nlocal; i++)
     {
         printf("| %2d. %-45s |\n", i + 1, GLocal[i].nomelocal);
     }
 
-    printf("+--------------------------------------------------+\n\n");
+    printf("+---------------------------------------------------+\n\n");
 }
 void listaNomesCategoria()
 {
@@ -1495,8 +1489,7 @@ void listaNomesCategoria()
 
     printf("+--------------------------------------------------+\n\n");
 }
-void listaAmigo()
-{
+void listaAmigo() {
     int op;
     if (Namigo < 1)
     {
@@ -1604,6 +1597,7 @@ void listaEnc()
         printf("\nInsira sua opcao: \n");
         scanf("%d", &op);
         op--;
+        limparTela();
         imprimeEncontro(GEncontro[op], op);
         flushs();
     }
@@ -1732,7 +1726,6 @@ void incluiEncontro()
         NEncontro++;
     }
 }
-
 SEncontro cadastraEncontro(int num)
 {
     SEncontro e;
@@ -2049,7 +2042,7 @@ SAmigo cadastraAmigo(int num)
 
     limparTela();
     printf("-- Adicionando Amigo --\n\n");
-    printf("apelido do amigo: ");
+    printf("Apelido do amigo: ");
     flushs();
     gets(strAux);
     flushs();
@@ -2080,6 +2073,7 @@ SAmigo cadastraAmigo(int num)
     erro = 0;
     while (erro != 1)
     {
+        limparTela();
         printf("-- Adicionando Amigo --\n\n");
         printf("Data de nascimento do amigo (DD MM AA):  ");
         scanf("%02d%02d%04d", &a.datanasc.dia, &a.datanasc.mes, &a.datanasc.ano);
@@ -2094,9 +2088,8 @@ SAmigo cadastraAmigo(int num)
     }
 
     limparTela();
-    printf("-- Adicionando Amigo --\n\n");
-    printf("Amigo adicionado!\n");
     imprimeAmigo(a, num);
+    printf("Amigo adicionado!\n");
     pause();
 
     return a;
@@ -2119,9 +2112,8 @@ SLocal cadastraLocal(int num)
 {
     SLocal l;
     char strAux[100];
-    int erro = 1;
-
-    while (erro)
+    int erro = 0;
+    do
     {
         limparTela();
         printf("-- Adicionando Local --\n\n");
@@ -2130,27 +2122,25 @@ SLocal cadastraLocal(int num)
         gets(strAux);
         flushs();
 
-        if (Nlocal > 0)
+        erro = 0;
+
+        for (int i = 0; i < Nlocal; i++)
         {
-            for (int i = 0; i < Nlocal; i++)
+            if (strcmp(GLocal[i].nomelocal, strAux) == 0)
             {
-                if (strcmp(GLocal[i].nomelocal, strAux) == 0)
-                {
-                    printf("\nLocal com este nome ja existe!\n");
-                    pause();
-                    erro = 1;
-                }
-                else
-                {
-                    erro = 0;
-                }
+                erro = 1;
+                printf("\nLocal com este nome ja existe!\n");
+                pause();
+                break;
             }
         }
-        else
+
+        if (!erro)
         {
-            erro = 0;
+            break;
         }
-    }
+
+    } while (1); 
 
     l.nomelocal = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
     strcpy(l.nomelocal, strAux);
@@ -2207,9 +2197,8 @@ SLocal cadastraLocal(int num)
     flushs();
 
     limparTela();
-    printf("-- Adicionando Local --\n\n");
-    printf("Local adicionado!\n");
     imprimeLocal(l, num);
+    printf("Local adicionado!\n");
     pause();
 
     return l; // Retorna o local cadastrado
@@ -2880,15 +2869,12 @@ void editaEncontro()
             return;
         }
 
-        limparTela();
-        printf("Que encontro você deseja editar?\n\n");
-
-        listaNomesEncontros();
-
         while (op < 1 || op > NEncontro)
         {
             flushs();
-            printf("Escolha um encontro: ");
+            limparTela();
+            listaNomesEncontros();
+            printf("Escolha um encontro para editar: ");
             scanf("%d", &op);
             flushs();
             if (op < 1 || op > NEncontro)
@@ -2925,7 +2911,7 @@ void editaEncontro()
             limparTela();
             return;
         }
-        limparTela();
+        printf("\n\n");
         switchEncontro(op, enc - 1);
 
         auxEdita = desejaAlterar();
@@ -2934,31 +2920,69 @@ void editaEncontro()
 void switchEncontro(int op, int encontro)
 {
     char strAux[100];
-    int opaux = 0, auxdata = 0, auxhora;
+    int opaux = 0, auxdata = 0, auxhora, duplo = 0;
     char opc;
 
     switch (op)
     {
     case 1: // nome
-
-        printf("Alterar [ %s ]: ", GEncontro[encontro].nomeencontro);
-        flushs();
-        gets(strAux);
-        flushs();
-
-        printf("Deseja realmente alterar o nome para '%s'? (S/N): ", strAux);
-        flushs();
-        scanf("%c", &opc);
-        if (opc == 'S' || opc == 's')
+        do
         {
-            GEncontro[encontro].nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-            strcpy(GEncontro[encontro].nomeencontro, strAux);
-            printf("Nome alterado com sucesso!\n");
-        }
-        else
-        {
-            printf("Alteracao cancelada.\n");
-        }
+            printf("Alterar o nome [ %s ] para: ", GEncontro[encontro].nomeencontro);
+            flushs();
+            gets(strAux);
+            flushs();
+
+            if (strcmp(GEncontro[encontro].nomeencontro, strAux) == 0)
+            {
+                printf("\nEsse ai ja eh o mesmo nome ne querido, beleza ne\n");
+            }
+            else
+            {
+                for (int i = 0; i < NEncontro; i++)
+                {
+                    if (i == encontro)
+                    {
+                        i = i + 1;
+                    }
+                    else
+                    {
+                        if (strcmp(GEncontro[i].nomeencontro, strAux) == 0)
+                        {
+                            duplo = 1;
+                            break;
+                        }
+                    }
+                }
+
+                if (duplo)
+                {
+                    printf("\nIsso ai ja eh de outro encontro seu bobinho.\n");
+                    printf("Selecione outro nome AGORAAAAAAA.\n");
+                    pause();
+                }
+
+                else
+                {
+
+                    printf("Deseja realmente alterar o nome para [ %s ]? (S/N): ", strAux);
+                    flushs();
+                    scanf("%c", &opc);
+                    if (opc == 'S' || opc == 's')
+                    {
+                        GEncontro[encontro].nomeencontro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+                        strcpy(GEncontro[encontro].nomeencontro, strAux);
+                        printf("Nome alterado com sucesso!\n");
+                    }
+                    else
+                    {
+                        printf("Alteracao cancelada.\n");
+                    }
+                }
+            }
+
+        } while (duplo);
+
         break;
 
     case 2: // amigo
@@ -2975,13 +2999,13 @@ void switchEncontro(int op, int encontro)
         }
         else
         {
-            printf("Alterar [ %s ]\n", GEncontro[encontro].localencontro);
             int erro = 0;
 
             while (erro != 1)
             {
-                printf("Qual e o novo local do encontro?\n");
+                limparTela();
                 listaNomesLocal();
+                printf("Insira o novo local do encontro: ");
                 scanf("%d", &op);
 
                 if (op <= 0 || op > Nlocal)
@@ -2990,13 +3014,21 @@ void switchEncontro(int op, int encontro)
                 }
                 else
                 {
-                    GEncontro[encontro].localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
-                    if (GEncontro[encontro].localencontro == NULL)
+                    if (strcmp(GEncontro[encontro].localencontro, GLocal[op - 1].nomelocal) == 0)
                     {
-                        mensagemErro(-4);
-                        break;
+                        printf("\nIsso ai ja eh a mesma coisa de antes neh flor, perda de tempo mesmo. . . ");
                     }
-                    strcpy(GEncontro[encontro].localencontro, GLocal[op - 1].nomelocal);
+                    else
+                    {
+
+                        GEncontro[encontro].localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
+                        if (GEncontro[encontro].localencontro == NULL)
+                        {
+                            mensagemErro(-4);
+                            break;
+                        }
+                        strcpy(GEncontro[encontro].localencontro, GLocal[op - 1].nomelocal);
+                    }
                     erro = 1;
                 }
             }
@@ -3012,14 +3044,13 @@ void switchEncontro(int op, int encontro)
         }
         else
         {
-            printf("Alterar [ %s ]:\n", GEncontro[encontro].categoriaencontro);
-
             int erro = 0;
 
             while (erro != 1)
             {
-                printf("Qual e a nova categoria do encontro?\n");
+                limparTela();
                 listaNomesCategoria();
+                printf("Insira a nova categoria do encontro: ");
                 scanf("%d", &op);
 
                 if (op <= 0 || op > NCat)
@@ -3028,13 +3059,22 @@ void switchEncontro(int op, int encontro)
                 }
                 else
                 {
-                    GEncontro[encontro].categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
-                    if (GEncontro[encontro].categoriaencontro == NULL)
+                    if (strcmp(GEncontro[encontro].categoriaencontro, GCategoria[op - 1].nomecat) == 0)
                     {
-                        mensagemErro(-4);
-                        break;
+                        printf("\nIsso ai ja eh a mesma coisa de antes neh flor, perda de tempo mesmo. . .");
                     }
-                    strcpy(GEncontro[encontro].categoriaencontro, GCategoria[op - 1].nomecat);
+
+                    else
+                    {
+                        GEncontro[encontro].categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
+                        if (GEncontro[encontro].categoriaencontro == NULL)
+                        {
+                            mensagemErro(-4);
+                            break;
+                        }
+                        strcpy(GEncontro[encontro].categoriaencontro, GCategoria[op - 1].nomecat);
+                        printf("\nCategoria Alterada com sucesso!! :)");
+                    }
                     erro = 1;
                 }
             }
@@ -3180,7 +3220,6 @@ void switchEncontro(int op, int encontro)
         break;
     }
     printf("\n");
-    pause();
 }
 
 // L I X E I R A
@@ -3242,9 +3281,6 @@ void excluiAmigo()
         }
         else if (opc == 'S' || opc == 's')
         {
-            limparTela();
-            printf("Você escolheu [S]; Excluindo. . . ");
-
             if (Namigo == 1)
             {
                 free(GAmigo);
@@ -3259,9 +3295,7 @@ void excluiAmigo()
             }
 
             Namigo--;
-
-            limparTela();
-            printf("exclusao bem sucedida!");
+            printf("Exclusao bem sucedida!\n");
             pause();
             return;
         }
@@ -3287,7 +3321,7 @@ void excluiLocal()
     }
 
     int op = 0;
-    while (op < 1 || op > Nlocal) 
+    while (op < 1 || op > Nlocal)
     {
         limparTela();
         listaNomesLocal();
@@ -3466,9 +3500,9 @@ void excluiEncontro()
     }
     else
     {
-        printf("Qual encontro você deseja exlcuir?");
         listaNomesEncontros();
         printf("%d. Voltar\n\n", NEncontro + 1);
+        printf("Insira encontro para excluir [ 01 - %02d ]: ", NEncontro);
         scanf("%d", &op);
 
         if (op < 1 || op > NEncontro + 1)
