@@ -60,7 +60,6 @@ typedef struct
 // aperte Ctrl K + Ctrl J para maximizar (desdobrar) TODAS as funcões
 // - dicas do otavio augusto :))
 
-// problema na hora de adicionar coiso q tem mesmo nome verificar isso em TODOS (encontro, amigo, categoria e local!!!!!!!)
 SAmigo *GAmigo;
 int Namigo = 0;
 SEncontro *GEncontro;
@@ -315,6 +314,7 @@ int validaData(int dd, int mm, int yy)
 }
 void mensagemErro(int erro)
 {
+    limparTela();
     printf("\n===============================================================================\n");
     switch (erro)
     {
@@ -339,6 +339,23 @@ void mensagemErro(int erro)
     case -6:
         printf("ERRO! Nao e possivel executar a acao, pois esta vinculado a um encontro!\n");
         printf("Remova do encontro antes de fazer qualquer coisa.\n");
+        break;
+    case -7:
+        printf("ERRO! Nao ha nenhum amigo disponivel!\n");
+        printf("Adicione!\n");
+        break;
+    case -8:
+        printf("ERRO! Nao ha nenhum local disponivel!\n");
+        printf("Adicione!\n");
+        break;
+    case -9:
+        printf("ERRO! Nao ha nenhuma categoria disponivel!\n");
+        printf("Adicione!\n");
+        break;
+    case -10:
+        printf("ERRO! Nao ha nenhum encontro disponivel!\n");
+        printf("Adicione!\n");
+        break;
     }
     printf("===============================================================================\n\n");
     pause();
@@ -352,13 +369,13 @@ int menuPrincipal()
     limparTela();
 
     printf("+----------------------------------------------+\n");
-    printf("|                 MENU PRINCIPAL               |\n");
+    printf("|    =^.^=        MENU PRINCIPAL               |\n");
     printf("+----------------------------------------------+\n");
     printf("| 1. Manter amigo                              |\n");
     printf("| 2. Manter local                              |\n");
     printf("| 3. Manter categoria                          |\n");
     printf("| 4. Manter encontro                           |\n");
-    printf("| 5. Listas                                    |\n");
+    printf("| 5. Relatorios                                |\n");
     printf("| 6. Sair                                      |\n");
     printf("+----------------------------------------------+\n\n");
 
@@ -569,7 +586,7 @@ void listaMenu()
     printf("| 2. Listar locais                             |\n");
     printf("| 3. Listar categorias                         |\n");
     printf("| 4. Listar encontros                          |\n");
-    printf("| 5. Relatorio por Categoria                   |\n");
+    printf("| 5. Relatorio de Encontros por Categoria      |\n");
     printf("| 6. Voltar                                    |\n");
     printf("+----------------------------------------------+\n");
     printf("\n");
@@ -1444,7 +1461,8 @@ void listaNomesEncontros()
 
     printf("+---------------------------------------------------+\n\n");
 }
-void listaNomesAmigo(){
+void listaNomesAmigo()
+{
     if (Namigo < 1)
     {
         printf("nao existe nada adicionado! adicione!!");
@@ -1489,12 +1507,12 @@ void listaNomesCategoria()
 
     printf("+--------------------------------------------------+\n\n");
 }
-void listaAmigo() {
+void listaAmigo()
+{
     int op;
     if (Namigo < 1)
     {
-        printf("nao existe nada adicionado! adicione!!");
-        pause();
+        mensagemErro(-7);
         return;
     }
 
@@ -1521,8 +1539,7 @@ void listaLocal()
     int op;
     if (Nlocal < 1)
     {
-        printf("nao existe nada adicionado! adicione!!");
-        pause();
+        mensagemErro(-8);
         return;
     }
 
@@ -1549,8 +1566,7 @@ void listaCat()
     int op;
     if (NCat < 1)
     {
-        printf("nao existe nada adicionado! adicione!!");
-        pause();
+        mensagemErro(-9);
         return;
     }
 
@@ -1580,8 +1596,7 @@ void listaEnc()
     int op;
     if (NEncontro < 1)
     {
-        printf("nao existe nada adicionado! adicione!!");
-        pause();
+        mensagemErro(-10);
         return;
     }
 
@@ -1610,15 +1625,14 @@ void relaCat()
 {
     int cont[NCat];
     int indices[NCat];
-    limparTela();
 
     if (NEncontro < 1)
     {
-        printf("Nao ha encontros para fazer relatorio por categoria!\nAdicione!\n");
-        pause();
+        mensagemErro(-10);
         return;
     }
 
+    limparTela();
     printf("Relatorio por categoria:\n\n");
 
     for (int i = 0; i < NCat; i++)
@@ -1634,7 +1648,7 @@ void relaCat()
             if (strcmp(GCategoria[i].nomecat, GEncontro[k].categoriaencontro) == 0)
             {
                 cont[i]++;
-            }
+            } 
         }
     }
 
@@ -2140,7 +2154,7 @@ SLocal cadastraLocal(int num)
             break;
         }
 
-    } while (1); 
+    } while (1);
 
     l.nomelocal = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
     strcpy(l.nomelocal, strAux);
@@ -2276,9 +2290,7 @@ void editaAmigo()
         int op = 0;
         if (Namigo == 0)
         {
-            limparTela();
-            printf("Nao ha amigos disponiveis para editar! Adicione um Amigo!\n");
-            pause();
+            mensagemErro(-7);
             return;
         }
 
@@ -2519,9 +2531,7 @@ void editaLocal()
         int op = 0;
         if (Nlocal == 0)
         {
-            limparTela();
-            printf("Nao ha Locais disponiveis para editar! Adicione um Local!\n");
-            pause();
+            mensagemErro(-8);
             return;
         }
 
@@ -2747,9 +2757,7 @@ void editaCategoria()
         int op = 0;
         if (NCat == 0)
         {
-            limparTela();
-            printf("Nao ha categorias disponiveis para editar! Adicione!\n");
-            pause();
+            mensagemErro(-9);
             return;
         }
         while (op < 1 || op > NCat)
@@ -2863,9 +2871,7 @@ void editaEncontro()
         int op = 0;
         if (NEncontro == 0)
         {
-            limparTela();
-            printf("Nao ha encontros disponiveis para editar! Adicione um Encontro!\n");
-            pause();
+            mensagemErro(-10);
             return;
         }
 
@@ -3228,9 +3234,7 @@ void excluiAmigo()
 
     if (Namigo < 1)
     {
-        limparTela();
-        printf("nao ha amigos disponiveis! (kkkkkk mo otario)\n");
-        pause();
+        mensagemErro(-7);
         return;
     }
 
@@ -3314,9 +3318,7 @@ void excluiLocal()
 
     if (Nlocal < 1)
     {
-        limparTela();
-        printf("nao ha locais disponiveis!\n");
-        pause();
+        mensagemErro(-8);
         return;
     }
 
@@ -3403,9 +3405,7 @@ void excluiCat()
 {
     if (NCat < 1)
     {
-        limparTela();
-        printf("nao ha nenhum disponivel!\n");
-        pause();
+        mensagemErro(-9);
         return;
     }
 
@@ -3494,8 +3494,7 @@ void excluiEncontro()
 
     if (NEncontro == 0)
     {
-        printf("Nao ha encontros! Adicione!\n");
-        pause();
+        mensagemErro(-10);
         return;
     }
     else
