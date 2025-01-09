@@ -69,7 +69,7 @@ int Nlocal = 0;
 SCategoria *GCategoria;
 int NCat = 0;
 
-//exibir amigo pra editar depois de escolher opcao incorreta [plmds]
+// exibir amigo pra editar depois de escolher opcao incorreta [plmds]
 
 // A U X I L I A R
 void limparTela();
@@ -153,6 +153,7 @@ void listaEnc();
 void recuperaEncontro();
 void salvaEncontro();
 void limpaEncontro();
+void salvandoAviso();
 
 //       C        O        D        I        G        O            -----------------------------------------------------------
 
@@ -164,12 +165,21 @@ int main()
     int op = 0;
     while (op != 6)
     {
+        salvaDado();
         op = menuPrincipal();
+        salvandoAviso();
     }
     salvaDado();
     limpaDado();
 
     return 0;
+}
+void salvandoAviso()
+{
+    limparTela();
+    printf("Salvando . . .\n");
+    pause();
+    limparTela();
 }
 int TodosOuUmLista()
 {
@@ -367,16 +377,14 @@ void mensagemErro(int erro)
 // M E N U S
 int menuPrincipal()
 {
-
     limparTela();
-
-    printf("+----------------------------------------------+\n");
-    printf("|    =^.^=        MENU PRINCIPAL               |\n");
+    printf("+------/  \\--------------------------/  \\------+\n");
+    printf("|                MENU  PRINCIPAL               |\n");
     printf("+----------------------------------------------+\n");
     printf("| 1. Manter amigo                              |\n");
-    printf("| 2. Manter local                              |\n");
+    printf("< 2. Manter local                              >\n");
     printf("| 3. Manter categoria                          |\n");
-    printf("| 4. Manter encontro                           |\n");
+    printf("< 4. Manter encontro                           >\n");
     printf("| 5. Relatorios                                |\n");
     printf("| 6. Sair                                      |\n");
     printf("+----------------------------------------------+\n\n");
@@ -1650,7 +1658,7 @@ void relaCat()
             if (strcmp(GCategoria[i].nomecat, GEncontro[k].categoriaencontro) == 0)
             {
                 cont[i]++;
-            } 
+            }
         }
     }
 
@@ -2296,12 +2304,12 @@ void editaAmigo()
             return;
         }
 
-        limparTela();
-        printf("Que amigo você deseja editar?\n\n");
-        listaNomesAmigo();
-
         while (op < 1 || op > Namigo)
         {
+            limparTela();
+            printf("Que amigo você deseja editar?\n\n");
+            listaNomesAmigo();
+
             printf("Escolha um amigo: ");
             scanf("%d", &op);
             if (op < 1 || op > Namigo)
@@ -2535,14 +2543,14 @@ void editaLocal()
             mensagemErro(-8);
             return;
         }
-
-        limparTela();
-        printf("Que Local você deseja editar?\n\n");
-
-        listaNomesLocal();
-
         while (op < 1 || op > Nlocal)
         {
+
+            limparTela();
+            printf("Que Local você deseja editar?\n\n");
+
+            listaNomesLocal();
+
             printf("Escolha um Local: ");
             scanf("%d", &op);
             if (op < 1 || op > Nlocal)
