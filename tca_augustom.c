@@ -69,6 +69,8 @@ int Nlocal = 0;
 SCategoria *GCategoria;
 int NCat = 0;
 
+//exibir amigo pra editar depois de escolher opcao incorreta [plmds]
+
 // A U X I L I A R
 void limparTela();
 void flushs();
@@ -1827,7 +1829,7 @@ SEncontro cadastraEncontro(int num)
 
                 printf("\nAmigo adicionado no encontro!\n");
                 pause();
-                if (Namigo > 1)
+                if (Namigo > 1 && e.enumamigos != Namigo)
                 {
                     limparTela();
                     printf("+--------------------------------------------------+\n");
@@ -2296,7 +2298,6 @@ void editaAmigo()
 
         limparTela();
         printf("Que amigo você deseja editar?\n\n");
-
         listaNomesAmigo();
 
         while (op < 1 || op > Namigo)
