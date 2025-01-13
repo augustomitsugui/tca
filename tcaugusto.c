@@ -641,7 +641,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
     {
         limparTela();
         printf("+----------------------------------------------+\n");
-        printf("|                 ENCONTRO [ %d ]              |\n", numenc + 1);
+        printf("|                 ENCONTRO [ %02d ]              |\n", numenc + 1);
         printf("+----------------------------------------------+\n");
         printf("| 1. Adicionar Amigo                           |\n");
         printf("| 2. Remover Amigo                             |\n");
@@ -1327,7 +1327,7 @@ void limpaEncontro()
 void imprimeEncontro(SEncontro e, int enc)
 {
     printf("+--------------------------------------------------+\n");
-    printf("|                  Encontro %-2d                      |\n", enc + 1);
+    printf("|                   Encontro %02d                    |\n", enc + 1);
     printf("+--------------------------------------------------+\n");
     printf("| Nome: %-42s |\n", e.nomeencontro);
     printf("+--------------------------------------------------+\n");
@@ -1367,13 +1367,13 @@ void listaTodosEncontros()
 void listaAmigosDoEncontro(SEncontro e)
 {
     printf("+---------------------------------------------------+\n");
-    printf("|              Lista de Amigos do Encontro          |\n");
+    printf("|             Lista de Amigos do Encontro           |\n");
     printf("+---------------------------------------------------+\n");
     for (int i = 0; i < e.enumamigos; i++)
     {
-        printf("| %2d.  %-44s  |\n", i + 1, e.amigoencontro[i]);
+        printf("| %2d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
     }
-    printf("+--------------------------------------------------+\n\n");
+    printf("+---------------------------------------------------+\n\n");
 }
 void imprimeAmigo(SAmigo a, int num)
 {
@@ -1780,12 +1780,47 @@ SEncontro cadastraEncontro(int num)
         printf("-- Adicionando Encontro --\n\n");
         printf("\nQual amigo deseja adicionar no encontro?\n");
         listaNomesAmigo();
+        printf("%02d. Todos\n", Namigo + 1);
         printf("\n");
         scanf("%d", &op);
 
-        if (op <= 0 || op > Namigo)
+        if (op <= 0 || op > Namigo + 1)
         {
             mensagemErro(-1);
+        }
+        else if (op == Namigo + 1)
+        {
+            for (int s = 0; s < Namigo; s++)
+            {
+                if (e.enumamigos == 0)
+                {
+                    e.amigoencontro = (char **)malloc(sizeof(char *));
+                }
+                else
+                {
+                    e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
+                }
+
+                if (e.amigoencontro == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+
+                e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[s].nome) + 1);
+
+                if (e.amigoencontro[e.enumamigos] == NULL)
+                {
+                    mensagemErro(-4);
+                    break;
+                }
+
+                strcpy(e.amigoencontro[e.enumamigos], GAmigo[s].nome);
+                e.enumamigos++;
+            }
+            printf("\nAmigos adicionados ao encontro!\n");
+            erro = 1;
+            pause();
         }
         else
         {
@@ -1877,14 +1912,8 @@ SEncontro cadastraEncontro(int num)
     {
         limparTela();
         printf("-- Adicionando Encontro --\n\n");
-        printf("dia do encontro:\n");
-        scanf("%d", &e.dataencontro.dia);
-        flushs();
-        printf("\nMês do encontro:\n");
-        scanf("%d", &e.dataencontro.mes);
-        flushs();
-        printf("\nAno do encontro:\n");
-        scanf("%d", &e.dataencontro.ano);
+        printf("Data do Encontro (DD MM AA):  ");
+        scanf("%02d%02d%04d", &e.dataencontro.dia, &e.dataencontro.mes, &e.dataencontro.ano);
         flushs();
 
         erro = validaData(e.dataencontro.dia, e.dataencontro.mes, e.dataencontro.ano);
