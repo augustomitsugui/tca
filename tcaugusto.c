@@ -152,7 +152,6 @@ void listaEnc();
 void recuperaEncontro();
 void salvaEncontro();
 void limpaEncontro();
-void salvandoAviso();
 
 //       C        O        D        I        G        O            -----------------------------------------------------------
 
@@ -164,21 +163,12 @@ int main()
     int op = 0;
     while (op != 6)
     {
-        salvaDado();
         op = menuPrincipal();
-        salvandoAviso();
     }
     salvaDado();
     limpaDado();
 
     return 0;
-}
-void salvandoAviso()
-{
-    limparTela();
-    printf("Salvando . . .\n");
-    pause();
-    limparTela();
 }
 int TodosOuUmLista()
 {
@@ -815,7 +805,6 @@ void recuperaDado()
 }
 void salvaDado()
 {
-
     salvaAmigo();
     salvaLocal();
     salvaCat();
@@ -2963,7 +2952,7 @@ void editaEncontro()
 void switchEncontro(int op, int encontro)
 {
     char strAux[100];
-    int opaux = 0, auxdata = 0, auxhora, duplo = 0;
+    int duplo = 0, erro = 0, ad, am, aa, ah, amin;
     char opc;
 
     switch (op)
@@ -2986,15 +2975,12 @@ void switchEncontro(int op, int encontro)
                 {
                     if (i == encontro)
                     {
-                        i = i + 1;
+                        i++;
                     }
-                    else
+                    if (strcmp(GEncontro[i].nomeencontro, strAux) == 0)
                     {
-                        if (strcmp(GEncontro[i].nomeencontro, strAux) == 0)
-                        {
-                            duplo = 1;
-                            break;
-                        }
+                        duplo = 1;
+                        break;
                     }
                 }
 
@@ -3123,113 +3109,40 @@ void switchEncontro(int op, int encontro)
             }
         }
         break;
-    case 5: // data do encontro
-        while (opaux < 1 || opaux > 3)
+    case 5: // data
+        while (erro != 1)
         {
             limparTela();
-            printf("O que deseja editar na data?\n");
-            printf("1. Dia\n2. Mês\n3. Ano\nEscolha: ");
-            scanf("%d", &opaux);
-            if (opaux < 1 || opaux > 3)
+            printf("\nData do encontro atual: [ %02d / %02d / %02d ]\n", GEncontro[encontro].dataencontro.dia, GEncontro[encontro].dataencontro.mes, GEncontro[encontro].dataencontro.ano);
+            printf("Insira a nova data (DD MM AA): ");
+            scanf("%02d %02d %4d", &ad, &am, &aa);
+            erro = validaData(ad, am, aa);
+            if (!erro)
             {
-                mensagemErro(-1);
+                mensagemErro(erro);
             }
         }
-        printf("Insira o novo valor: ");
-        scanf("%d", &auxdata);
-        if ((auxdata > 0 && auxdata <= 31 && opaux == 1) || (auxdata > 0 && auxdata <= 12 && opaux == 2) || (auxdata > 0 && auxdata <= 9999 && opaux == 3))
-        {
+        GEncontro[encontro].dataencontro.dia = ad;
+        GEncontro[encontro].dataencontro.mes = am;
+        GEncontro[encontro].dataencontro.ano = aa;
 
-            printf("\n");
-            switch (opaux)
-            {
-            case 1:
-                printf("Deseja realmente alterar o dia para %02d? (S/N): ", auxdata);
-                break;
-            case 2:
-                printf("Deseja realmente alterar o mês para %02d? (S/N): ", auxdata);
-                break;
-            case 3:
-                printf("Deseja realmente alterar o ano para %04d? (S/N): ", auxdata);
-                break;
-            }
-            flushs();
-            scanf("%c", &opc);
-            if (opc == 'S' || opc == 's')
-            {
-                switch (opaux)
-                {
-                case 1:
-                    GEncontro[encontro].dataencontro.dia = auxdata;
-                    break;
-                case 2:
-                    GEncontro[encontro].dataencontro.mes = auxdata;
-                    break;
-                case 3:
-                    GEncontro[encontro].dataencontro.ano = auxdata;
-                    break;
-                }
-                printf("Data do encontro alterada com sucesso!\n");
-            }
-            else
-            {
-                printf("Alteracao cancelada.\n");
-            }
-        }
-        else
-        {
-            limparTela();
-            printf("Valor invalido para data! [ %d ]\nRetornando a menu de Encontro.", auxdata);
-        }
+        printf("\nData do encontro alterada para (%02d / %02d / %02d) com sucesso!\n", GEncontro[encontro].dataencontro.dia, GEncontro[encontro].dataencontro.mes, GEncontro[encontro].dataencontro.ano);
         break;
-
     case 6: // hora
-        while (opaux < 1 || opaux > 3)
+        while (erro != 1)
         {
-            limparTela();
-            printf("O que deseja editar na hora?\n");
-            printf("1. hora\n2. minuto\n\nEscolha: ");
-            scanf("%d", &opaux);
-            if (opaux < 1 || opaux > 2)
+            printf("\nHora do encontro atual: [ %02d : %02d ]\n", GEncontro[encontro].horaencontro.hora, GEncontro[encontro].horaencontro.minuto);
+            printf("Insira o novo horario (HH MM): ");
+            scanf("%2d %2d", &ah, &amin);
+            erro = validaHora(ah, amin);
+            if (!erro)
             {
-                mensagemErro(-1);
+                mensagemErro(-5);
             }
         }
-
-        printf("Insira o novo valor: ");
-        scanf("%d", &auxhora);
-
-        printf("\n");
-        switch (opaux)
-        {
-        case 1:
-            printf("Deseja realmente alterar o horario para %02d? (S/N): ", auxhora);
-            break;
-        case 2:
-            printf("Deseja realmente alterar o minuto para %02d? (S/N): ", auxhora);
-            break;
-        }
-
-        flushs();
-
-        scanf("%c", &opc);
-        if (opc == 'S' || opc == 's')
-        {
-            switch (opaux)
-            {
-            case 1:
-                GEncontro[encontro].horaencontro.hora = auxhora;
-                break;
-            case 2:
-                GEncontro[encontro].horaencontro.minuto = auxhora;
-                break;
-            }
-            printf("Hora do encontro alterada com sucesso!\n");
-        }
-        else
-        {
-            printf("Alteracao cancelada.\n");
-        }
+        GEncontro[encontro].horaencontro.hora = ah;
+        GEncontro[encontro].horaencontro.minuto = amin;
+        printf("\nHora do encontro alterada com sucesso para [ %02d : %02d ]\n", GEncontro[encontro].horaencontro.hora, GEncontro[encontro].horaencontro.minuto);
         break;
 
     case 7:
@@ -3262,6 +3175,7 @@ void switchEncontro(int op, int encontro)
         mensagemErro(-1);
         break;
     }
+    pause();
     printf("\n");
 }
 
