@@ -44,14 +44,13 @@ typedef struct
 
 typedef struct
 {
+    char *nomeencontro;
     SData dataencontro;
     SHora horaencontro;
     char *localencontro;
     char **amigoencontro;
     int enumamigos;
     char *categoriaencontro;
-    char *nomeencontro;
-
     char *descricao;
 
 } SEncontro;
@@ -1323,7 +1322,7 @@ void limpaEncontro()
     }
 }
 
-// I M P R E S S O R A S
+// I M P R E S S O R A S   &   L I S T A S
 void imprimeEncontro(SEncontro e, int enc)
 {
     printf("+--------------------------------------------------+\n");
