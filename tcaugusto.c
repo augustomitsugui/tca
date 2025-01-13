@@ -795,7 +795,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
     return e;
 }
 
-// A R Q U I V O
+// A R Q U I V O s
 void recuperaDado()
 {
     recuperaAmigo();
@@ -816,6 +816,7 @@ void limpaDado()
     limpaLocal();
     limpaCat();
     limpaEncontro();
+
 }
 void recuperaAmigo()
 {
