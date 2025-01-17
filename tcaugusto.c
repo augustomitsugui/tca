@@ -182,7 +182,7 @@ int main()
 void salvandoAviso()
 {
     limparTela();
-    printf("\nSalvando. . .\n");
+    printf("Salvando. . .\n");
     pause();
 }
 int TodosOuUmLista()
