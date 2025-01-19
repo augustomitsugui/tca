@@ -55,7 +55,7 @@ typedef struct
 
 } SEncontro;
 
-// aperte Ctrl K + Ctrl 0 para minimizar e acessar funcões mais facilmente ;)
+// aperte Ctrl K + Ctrl 0 para minimizar e acessar funcões mais facilmente ;) 
 // aperte Ctrl K + Ctrl J para maximizar (desdobrar) TODAS as funcões
 // - dicas do otavio augusto :))
 
@@ -132,17 +132,15 @@ void listaLocal();
 
 // C A T E G O R I A
 void listaCat();
-void incluiCategoria();
-SCategoria cadastraCategoria(int num);
 void imprimeCategoria(SCategoria c, int num);
 void listaTodasCategorias();
 void editaCategoria();
 void switchCat(int op, int cat);
 void excluiCat();
+void incluiCategoria();
+SCategoria cadastraCategoria(int num);
 
 // E N C O N T R O
-void incluiEncontro();
-SEncontro cadastraEncontro(int num);
 void imprimeEncontro(SEncontro e, int enc);
 void listaNomesEncontros();
 void listaTodosEncontros();
@@ -150,11 +148,13 @@ void editaEncontro();
 void switchEncontro();
 void excluiEncontro();
 void listaAmigosDoEncontro(SEncontro e);
-SEncontro menuEditaAmigoEncontro(int numemc, SEncontro e);
 void listaEnc();
 void recuperaEncontro();
 void salvaEncontro();
 void limpaEncontro();
+void incluiEncontro();
+SEncontro cadastraEncontro(int num);
+SEncontro menuEditaAmigoEncontro(int numemc, SEncontro e);
 
 //       C        O        D        I        G        O            -----------------------------------------------------------
 
