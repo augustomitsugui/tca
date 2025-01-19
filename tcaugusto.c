@@ -661,6 +661,8 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                 {
 
                     listaNomesAmigo();
+                    printf("| %02d. Voltar                                        |\n", e.enumamigos + 1);
+                    printf("+---------------------------------------------------+\n");
                     printf("\nInsira amigo para adicionar ao encontro: ");
                     scanf("%d", &op);
 
@@ -736,12 +738,17 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                 else
                 {
                     listaAmigosDoEncontro(e);
+                    printf("| %02d. Voltar                                        |\n", Namigo + 1);
+                    printf("+---------------------------------------------------+\n");
                     printf("\nInsira amigo para remover do encontro: ");
                     scanf("%d", &amigop);
 
-                    if (amigop <= 0 || amigop > e.enumamigos)
+                    if (amigop <= 0 || amigop > e.enumamigos+1)
                     {
                         mensagemErro(-1);
+                    }
+                    else if (op == e.enumamigos +1){
+                        return e;
                     }
                     else
                     {
@@ -1380,7 +1387,7 @@ void listaNomesEncontros()
 
     for (int i = 0; i < NEncontro; i++)
     {
-        printf("| %2d. %-45s |\n", i + 1, GEncontro[i].nomeencontro);
+        printf("| %02d. %-46s|\n", i + 1, GEncontro[i].nomeencontro);
     }
 
     printf("+---------------------------------------------------+\n");
@@ -1597,7 +1604,7 @@ void listaAmigosDoEncontro(SEncontro e)
     printf("+---------------------------------------------------+\n");
     for (int i = 0; i < e.enumamigos; i++)
     {
-        printf("| %2d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
+        printf("| %02d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
     }
     printf("+---------------------------------------------------+\n\n");
 }
@@ -2393,10 +2400,6 @@ void editaAmigo()
                             linked = 1;
                             amgencontro[i] = 1;
                         }
-                        else
-                        {
-                            amgencontro[i] = 0;
-                        }
                     }
                 }
             }
@@ -2410,7 +2413,7 @@ void editaAmigo()
                         printf("[ %02d ]; ", i + 1);
                     }
                 }
-                printf("\nRemova antes de fazer qualquer coisa!\n");
+                printf("\nNao e possivel editar dados que estao atrelados a um encontro!\n");
                 pause();
                 return;
             }
@@ -3328,10 +3331,6 @@ void excluiAmigo()
                     {
                         linked = 1;
                         amgencontro[i] = 1;
-                    }
-                    else
-                    {
-                        amgencontro[i] = 0;
                     }
                 }
             }
