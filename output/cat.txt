@@ -1,0 +1,4 @@
+categoria!
+janta!
+piquenique!
+almoco!

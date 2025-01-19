@@ -59,16 +59,18 @@ typedef struct
 // aperte Ctrl K + Ctrl J para maximizar (desdobrar) TODAS as funcões
 // - dicas do otavio augusto :))
 
-SAmigo *GAmigo;
-int Namigo = 0;
 SEncontro *GEncontro;
 int NEncontro = 0;
+
+SAmigo *GAmigo;
+int Namigo = 0;
+
 SLocal *GLocal;
 int Nlocal = 0;
+
 SCategoria *GCategoria;
 int NCat = 0;
 
-// exibir amigo pra editar depois de escolher opcao incorreta [plmds]
 
 // A U X I L I A R
 void limparTela();
@@ -240,13 +242,11 @@ void pause()
 #ifdef _WIN32
     system("pause");
 #else
-    printf("\npressione qualquer tecla pra continuar. . .");
+    printf("\nPressione qualquer tecla para continuar. . .");
     flushs();
     getchar();
 #endif
 }
-
-// F U N C I O N A M E N T O   G E R A L
 int validaHora(int hora, int min)
 {
     if (hora < 0 || hora >= 24 || min < 0 || min >= 60)
@@ -808,20 +808,6 @@ void recuperaDado()
     recuperaCat();
     recuperaEncontro();
 }
-void salvaDado()
-{
-    salvaAmigo();
-    salvaLocal();
-    salvaCat();
-    salvaEncontro();
-}
-void limpaDado()
-{
-    limpaAmigo();
-    limpaLocal();
-    limpaCat();
-    limpaEncontro();
-}
 void recuperaAmigo()
 {
     int i, sep = 0;
@@ -899,138 +885,6 @@ void recuperaAmigo()
         }
     }
     fclose(pArq);
-}
-void salvaAmigo()
-{
-    FILE *pArq;
-
-    pArq = fopen("amigos.txt", "w");
-
-    if (pArq == NULL)
-    {
-        printf("ERRO: Nao foi possivel salvar as informacões.\n");
-        exit(0);
-    }
-
-    for (int i = 0; i < Namigo; i++)
-    {
-        fprintf(pArq, "%s!", GAmigo[i].nome);
-        fprintf(pArq, "%s!", GAmigo[i].apelido);
-        fprintf(pArq, "%s!", GAmigo[i].email);
-        fprintf(pArq, "%s!", GAmigo[i].telefone);
-        fprintf(pArq, "%i!", GAmigo[i].datanasc.dia);
-        fprintf(pArq, "%i!", GAmigo[i].datanasc.mes);
-        fprintf(pArq, "%i!", GAmigo[i].datanasc.ano);
-        fprintf(pArq, "%c", '\n');
-    }
-
-    fclose(pArq);
-}
-void limpaAmigo()
-{
-    if (Namigo == 0)
-    {
-        return;
-    }
-
-    else
-    {
-        for (int i = 0; i < Namigo; i++)
-        {
-            free(GAmigo[i].nome);
-            free(GAmigo[i].apelido);
-            free(GAmigo[i].email);
-            free(GAmigo[i].telefone);
-        }
-
-        free(GAmigo);
-    }
-}
-void recuperaCat()
-{
-    int i;
-    char str[100], c;
-
-    FILE *pArq;
-    pArq = fopen("cat.txt", "r");
-    if (pArq)
-    {
-        i = 0;
-
-        while ((c = fgetc(pArq)) != EOF)
-
-        {
-
-            if ((c != '\n') && (c != '!') && (c != EOF))
-            {
-                str[i++] = c;
-            }
-
-            else if ((c == '!') || (c == '\n'))
-            {
-                str[i] = '\0';
-                i = 0;
-
-                if (c == '!') // nome
-                {
-                    if (NCat == 0)
-                    {
-                        GCategoria = (SCategoria *)malloc(1 * sizeof(SCategoria));
-                    }
-                    else
-                    {
-                        GCategoria = (SCategoria *)realloc(GCategoria, (NCat + 1) * sizeof(SCategoria));
-                    }
-
-                    GCategoria[NCat].nomecat = (char *)malloc((strlen(str) + 1) * sizeof(char));
-                    strcpy(GCategoria[NCat].nomecat, str);
-                }
-                else if (c == '\n')
-                {
-                    NCat++;
-                }
-            }
-        }
-    }
-    fclose(pArq);
-}
-void salvaCat()
-{
-
-    FILE *pArq;
-
-    pArq = fopen("cat.txt", "w");
-
-    if (pArq == NULL)
-    {
-        printf("ERRO: Nao foi possivel salvar as informaceos");
-        exit(0);
-    }
-
-    for (int i = 0; i < NCat; i++)
-    {
-        fprintf(pArq, "%s!", GCategoria[i].nomecat);
-        fprintf(pArq, "%c", '\n');
-    }
-
-    fclose(pArq);
-}
-void limpaCat()
-{
-    if (NCat == 0)
-    {
-        return;
-    }
-
-    else
-    {
-        for (int i = 0; i < NCat; i++)
-        {
-            free(GCategoria[i].nomecat);
-        }
-
-        free(GCategoria);
-    }
 }
 void recuperaLocal()
 {
@@ -1111,53 +965,53 @@ void recuperaLocal()
     }
     fclose(pArq);
 }
-void salvaLocal()
+void recuperaCat()
 {
+    int i;
+    char str[100], c;
 
     FILE *pArq;
-
-    pArq = fopen("locais.txt", "w");
-
-    if (pArq == NULL)
+    pArq = fopen("cat.txt", "r");
+    if (pArq)
     {
-        printf("ERRO: Nao foi possivel salvar as informaceos");
-        exit(0);
-    }
+        i = 0;
 
-    for (int i = 0; i < Nlocal; i++)
-    {
-        fprintf(pArq, "%s!", GLocal[i].nomelocal);
-        fprintf(pArq, "%s!", GLocal[i].local.bairro);
-        fprintf(pArq, "%s!", GLocal[i].local.cidade);
-        fprintf(pArq, "%s!", GLocal[i].local.estado);
-        fprintf(pArq, "%s!", GLocal[i].local.logradouro);
-        fprintf(pArq, "%s!", GLocal[i].local.num);
-        fprintf(pArq, "%c", '\n');
-    }
+        while ((c = fgetc(pArq)) != EOF)
 
-    fclose(pArq);
-}
-void limpaLocal()
-{
-    if (Nlocal == 0)
-    {
-        return;
-    }
-
-    else
-    {
-        for (int i = 0; i < Nlocal; i++)
         {
-            free(GLocal[i].nomelocal);
-            free(GLocal[i].local.bairro);
-            free(GLocal[i].local.cidade);
-            free(GLocal[i].local.estado);
-            free(GLocal[i].local.logradouro);
-            free(GLocal[i].local.num);
-        }
 
-        free(GLocal);
+            if ((c != '\n') && (c != '!') && (c != EOF))
+            {
+                str[i++] = c;
+            }
+
+            else if ((c == '!') || (c == '\n'))
+            {
+                str[i] = '\0';
+                i = 0;
+
+                if (c == '!') // nome
+                {
+                    if (NCat == 0)
+                    {
+                        GCategoria = (SCategoria *)malloc(1 * sizeof(SCategoria));
+                    }
+                    else
+                    {
+                        GCategoria = (SCategoria *)realloc(GCategoria, (NCat + 1) * sizeof(SCategoria));
+                    }
+
+                    GCategoria[NCat].nomecat = (char *)malloc((strlen(str) + 1) * sizeof(char));
+                    strcpy(GCategoria[NCat].nomecat, str);
+                }
+                else if (c == '\n')
+                {
+                    NCat++;
+                }
+            }
+        }
     }
+    fclose(pArq);
 }
 void recuperaEncontro()
 {
@@ -1265,6 +1119,87 @@ void recuperaEncontro()
         fclose(pArq);
     }
 }
+
+void salvaDado()
+{
+    salvaAmigo();
+    salvaLocal();
+    salvaCat();
+    salvaEncontro();
+}
+void salvaAmigo()
+{
+    FILE *pArq;
+
+    pArq = fopen("amigos.txt", "w");
+
+    if (pArq == NULL)
+    {
+        printf("ERRO: Nao foi possivel salvar as informacões.\n");
+        exit(0);
+    }
+
+    for (int i = 0; i < Namigo; i++)
+    {
+        fprintf(pArq, "%s!", GAmigo[i].nome);
+        fprintf(pArq, "%s!", GAmigo[i].apelido);
+        fprintf(pArq, "%s!", GAmigo[i].email);
+        fprintf(pArq, "%s!", GAmigo[i].telefone);
+        fprintf(pArq, "%i!", GAmigo[i].datanasc.dia);
+        fprintf(pArq, "%i!", GAmigo[i].datanasc.mes);
+        fprintf(pArq, "%i!", GAmigo[i].datanasc.ano);
+        fprintf(pArq, "%c", '\n');
+    }
+
+    fclose(pArq);
+}
+void salvaLocal()
+{
+
+    FILE *pArq;
+
+    pArq = fopen("locais.txt", "w");
+
+    if (pArq == NULL)
+    {
+        printf("ERRO: Nao foi possivel salvar as informaceos");
+        exit(0);
+    }
+
+    for (int i = 0; i < Nlocal; i++)
+    {
+        fprintf(pArq, "%s!", GLocal[i].nomelocal);
+        fprintf(pArq, "%s!", GLocal[i].local.bairro);
+        fprintf(pArq, "%s!", GLocal[i].local.cidade);
+        fprintf(pArq, "%s!", GLocal[i].local.estado);
+        fprintf(pArq, "%s!", GLocal[i].local.logradouro);
+        fprintf(pArq, "%s!", GLocal[i].local.num);
+        fprintf(pArq, "%c", '\n');
+    }
+
+    fclose(pArq);
+}
+void salvaCat()
+{
+
+    FILE *pArq;
+
+    pArq = fopen("cat.txt", "w");
+
+    if (pArq == NULL)
+    {
+        printf("ERRO: Nao foi possivel salvar as informaceos");
+        exit(0);
+    }
+
+    for (int i = 0; i < NCat; i++)
+    {
+        fprintf(pArq, "%s!", GCategoria[i].nomecat);
+        fprintf(pArq, "%c", '\n');
+    }
+
+    fclose(pArq);
+}
 void salvaEncontro()
 {
 
@@ -1293,6 +1228,73 @@ void salvaEncontro()
         fprintf(pArq, "%02i!%02i!", GEncontro[i].horaencontro.hora, GEncontro[i].horaencontro.minuto);
         fprintf(pArq, "%s!", GEncontro[i].descricao);
         fprintf(pArq, "%c", '\n');
+    }
+}
+
+void limpaDado()
+{
+    limpaAmigo();
+    limpaLocal();
+    limpaCat();
+    limpaEncontro();
+}
+void limpaAmigo()
+{
+    if (Namigo == 0)
+    {
+        return;
+    }
+
+    else
+    {
+        for (int i = 0; i < Namigo; i++)
+        {
+            free(GAmigo[i].nome);
+            free(GAmigo[i].apelido);
+            free(GAmigo[i].email);
+            free(GAmigo[i].telefone);
+        }
+
+        free(GAmigo);
+    }
+}
+void limpaCat()
+{
+    if (NCat == 0)
+    {
+        return;
+    }
+
+    else
+    {
+        for (int i = 0; i < NCat; i++)
+        {
+            free(GCategoria[i].nomecat);
+        }
+
+        free(GCategoria);
+    }
+}
+void limpaLocal()
+{
+    if (Nlocal == 0)
+    {
+        return;
+    }
+
+    else
+    {
+        for (int i = 0; i < Nlocal; i++)
+        {
+            free(GLocal[i].nomelocal);
+            free(GLocal[i].local.bairro);
+            free(GLocal[i].local.cidade);
+            free(GLocal[i].local.estado);
+            free(GLocal[i].local.logradouro);
+            free(GLocal[i].local.num);
+        }
+
+        free(GLocal);
     }
 }
 void limpaEncontro()
@@ -1341,33 +1343,6 @@ void imprimeEncontro(SEncontro e, int enc)
     printf("| Desc: %-43s|\n", e.descricao);
     printf("+--------------------------------------------------+\n");
 }
-void listaTodosEncontros()
-{
-    limparTela();
-    if (NEncontro < 1)
-    {
-        printf("nao existem encontros! adicione um!\n");
-    }
-    else
-    {
-        for (int i = 0; i < NEncontro; i++)
-        {
-            imprimeEncontro(GEncontro[i], i);
-            printf("\n");
-        }
-    }
-}
-void listaAmigosDoEncontro(SEncontro e)
-{
-    printf("+---------------------------------------------------+\n");
-    printf("|             Lista de Amigos do Encontro           |\n");
-    printf("+---------------------------------------------------+\n");
-    for (int i = 0; i < e.enumamigos; i++)
-    {
-        printf("| %2d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
-    }
-    printf("+---------------------------------------------------+\n\n");
-}
 void imprimeAmigo(SAmigo a, int num)
 {
     printf("+--------------------------------------------------+\n");
@@ -1379,22 +1354,6 @@ void imprimeAmigo(SAmigo a, int num)
     printf("| E-Mail: %-40s |\n", a.email);
     printf("| Data de Nascimento: %02d / %02d / %04d               |\n", a.datanasc.dia, a.datanasc.mes, a.datanasc.ano);
     printf("+--------------------------------------------------+\n");
-}
-void listaTodosAmigos()
-{
-    limparTela();
-    if (Namigo < 1)
-    {
-        printf("nao existem amigos! adicione um amigo!\n");
-    }
-    else
-    {
-        for (int i = 0; i < Namigo; i++)
-        {
-            imprimeAmigo(GAmigo[i], i);
-            printf("\n");
-        }
-    }
 }
 void imprimeLocal(SLocal a, int num)
 {
@@ -1409,48 +1368,13 @@ void imprimeLocal(SLocal a, int num)
     printf("| Numero: %-40s |\n", a.local.num);
     printf("+--------------------------------------------------+\n");
 }
-void listaTodosLocais()
-{
-    limparTela();
-    if (Nlocal < 1)
-    {
-        printf("+--------------------------------------------------+\n");
-        printf("|               Não existem locais!                |\n");
-        printf("|               Adicione um local!                 |\n");
-        printf("+--------------------------------------------------+\n");
-    }
-    else
-    {
-        for (int i = 0; i < Nlocal; i++)
-        {
-            imprimeLocal(GLocal[i], i);
-            printf("\n");
-        }
-    }
-}
 void imprimeCategoria(SCategoria c, int num)
 {
     printf("+--------------------------------------------------+\n");
     printf("| %2d. %-45s|\n", num + 1, c.nomecat);
     printf("+--------------------------------------------------+\n");
 }
-void listaTodasCategorias()
-{
-    limparTela();
-    if (NCat < 1)
-    {
-        printf("nao existem cateogiras! adicione!\n");
-    }
-    else
-    {
-        for (int i = 0; i < NCat; i++)
-        {
-            imprimeCategoria(GCategoria[i], i);
-        }
 
-        printf("\n");
-    }
-}
 void listaNomesEncontros()
 {
     printf("+---------------------------------------------------+\n");
@@ -1624,6 +1548,88 @@ void listaEnc()
 
     return;
 }
+
+void listaTodosEncontros()
+{
+    limparTela();
+    if (NEncontro < 1)
+    {
+        printf("nao existem encontros! adicione um!\n");
+    }
+    else
+    {
+        for (int i = 0; i < NEncontro; i++)
+        {
+            imprimeEncontro(GEncontro[i], i);
+            printf("\n");
+        }
+    }
+}
+void listaAmigosDoEncontro(SEncontro e)
+{
+    printf("+---------------------------------------------------+\n");
+    printf("|             Lista de Amigos do Encontro           |\n");
+    printf("+---------------------------------------------------+\n");
+    for (int i = 0; i < e.enumamigos; i++)
+    {
+        printf("| %2d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
+    }
+    printf("+---------------------------------------------------+\n\n");
+}
+
+void listaTodosAmigos()
+{
+    limparTela();
+    if (Namigo < 1)
+    {
+        printf("nao existem amigos! adicione um amigo!\n");
+    }
+    else
+    {
+        for (int i = 0; i < Namigo; i++)
+        {
+            imprimeAmigo(GAmigo[i], i);
+            printf("\n");
+        }
+    }
+}
+void listaTodosLocais()
+{
+    limparTela();
+    if (Nlocal < 1)
+    {
+        printf("+--------------------------------------------------+\n");
+        printf("|               Não existem locais!                |\n");
+        printf("|               Adicione um local!                 |\n");
+        printf("+--------------------------------------------------+\n");
+    }
+    else
+    {
+        for (int i = 0; i < Nlocal; i++)
+        {
+            imprimeLocal(GLocal[i], i);
+            printf("\n");
+        }
+    }
+}
+void listaTodasCategorias()
+{
+    limparTela();
+    if (NCat < 1)
+    {
+        printf("nao existem cateogiras! adicione!\n");
+    }
+    else
+    {
+        for (int i = 0; i < NCat; i++)
+        {
+            imprimeCategoria(GCategoria[i], i);
+        }
+
+        printf("\n");
+    }
+}
+
 void relaCat()
 {
     int cont[NCat];

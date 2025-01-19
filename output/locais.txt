@@ -1,3 +1,1 @@
-IFPR!porto seguro!paranagua!parana!num sei!123!
-Casa de Augusto!parque agari!paranagua!parana!123!123!
-CInema!centro!parangua!parana!rua nao sei!123 123!
+Lugar!localizacao!place!local!132!1!
