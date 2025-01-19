@@ -1,4 +1,8 @@
-categoria!
-janta!
-piquenique!
-almoco!
+categria#
+almoco#
+jantar#
+cafe da tarde#
+festa do pijama#
+estudar#
+diversao#
+Seminario#
