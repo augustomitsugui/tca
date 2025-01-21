@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/augusto/Documents/codigos/augustocodes/tca",
-      "program": "c:/Users/augusto/Documents/codigos/augustocodes/tca/build/Debug/outDebug",
+      "cwd": "c:/Users/otami/Documents/codigos/tca",
+      "program": "c:/Users/otami/Documents/codigos/tca/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

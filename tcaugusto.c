@@ -1612,7 +1612,7 @@ void listaAmigosDoEncontro(SEncontro e)
     {
         printf("| %02d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
     }
-    printf("+---------------------------------------------------+\n\n");
+    printf("+---------------------------------------------------+\n");
 }
 
 void listaTodosAmigos()
