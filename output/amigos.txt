@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-Augusto!Augs!41 123!e!3!3!2000!
-Laura Schneider!Laurita!41 123!e!3!3!2009!
-Maria Fernanda Machado!Mafer!41 123!email!5!1!2009!
-Joao Victor Santos!Jaozin!41 123!1!1!1!2009!
-Ana Luiza Martins Araujo!Analu!41 112!1!29!6!2024!
-Manuela Isadora Mitsugui!Manu!41 123!e !24!7!2011!
-Roberto Teixeira!apelido!41 123!email!3!3!2009!
-=======
 O. Augusto Mitsugui#Augustinho#41 123 123#email#3#3#2009#
 Laura Schneider#Laurita #41 1231123#03213#17#12#2009#
 Maria Fernanda Machado#Mafer#41 123 123#email#5#1#2009#
@@ -18,4 +9,3 @@ Rubia Melo#Rubica#41 123 123#email#1#1#2001#
 Ana Lucia#Balduco#41 123 123#email#1#10#2001#
 Louise Ayumi Mitsugui#Lou#41 1231 23#email#1#1#2001#
 Iago Mitsugui#Iago#41 41 1233#email#18#3#2009#
->>>>>>> f7db9796972ea27ab0d890a95bc954934e0a123e

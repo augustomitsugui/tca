@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-Date!
-Filme!
-Piquenique!
-Churrasco!
-Ir as Compras!
-Jantar!
-Almoco!
-Cafe da Tarde!
-=======
 categria#
 almoco#
 jantar#
@@ -16,4 +6,3 @@ festa do pijama#
 estudar#
 diversao#
 Seminario#
->>>>>>> f7db9796972ea27ab0d890a95bc954934e0a123e
