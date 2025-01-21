@@ -72,6 +72,8 @@ int Nlocal = 0;
 SCategoria *GCategoria;
 int NCat = 0;
 
+//augsuto
+
 // A U X I L I A R
 void limparTela();
 void flushs();
@@ -622,8 +624,7 @@ void listaMenu()
         return;
     }
 }
-SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
-{
+SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e){
     int op = 0, amigop = 0;
     char opc;
     int saida = 1;
@@ -661,12 +662,16 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                 {
 
                     listaNomesAmigo();
-                    printf("| %02d. Voltar                                        |\n", e.enumamigos + 1);
+                    printf("| %02d. Voltar                                        |\n", Namigo + 1);
                     printf("+---------------------------------------------------+\n");
                     printf("\nInsira amigo para adicionar ao encontro: ");
                     scanf("%d", &op);
 
-                    if (op <= 0 || op > Namigo)
+                    if (op == Namigo + 1)
+                    {
+                        return e;
+                    }
+                    if (op <= 0 || op > Namigo + 1)
                     {
                         mensagemErro(-1);
                     }
@@ -738,16 +743,17 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                 else
                 {
                     listaAmigosDoEncontro(e);
-                    printf("| %02d. Voltar                                        |\n", Namigo + 1);
+                    printf("| %02d. Voltar                                        |\n", e.enumamigos + 1);
                     printf("+---------------------------------------------------+\n");
                     printf("\nInsira amigo para remover do encontro: ");
                     scanf("%d", &amigop);
 
-                    if (amigop <= 0 || amigop > e.enumamigos+1)
+                    if (amigop <= 0 || amigop > e.enumamigos + 1)
                     {
                         mensagemErro(-1);
                     }
-                    else if (op == e.enumamigos +1){
+                    else if (op == e.enumamigos + 1)
+                    {
                         return e;
                     }
                     else
@@ -804,7 +810,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
     return e;
 }
 
-// A R Q U I V O s
+// A R Q U I V O
 void recuperaDado()
 {
     recuperaAmigo();
@@ -812,24 +818,6 @@ void recuperaDado()
     recuperaCat();
     recuperaEncontro();
 }
-<<<<<<< HEAD
-void salvaDado()
-{
-    salvaAmigo();
-    salvaLocal();
-    salvaCat();
-    salvaEncontro();
-}
-void limpaDado()
-{
-    limpaAmigo();
-    limpaLocal();
-    limpaCat();
-    limpaEncontro();
-
-}
-=======
->>>>>>> f7db9796972ea27ab0d890a95bc954934e0a123e
 void recuperaAmigo()
 {
     int i, sep = 0;
