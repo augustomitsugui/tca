@@ -1045,7 +1045,7 @@ void recuperaEncontro()
                 str[i] = '\0';
                 i = 0;
 
-                if (sep == 0) // nome encontro eba
+                if (sep == 0) // nome encontro 
                 {
                     if (NEncontro == 0)
                     {
