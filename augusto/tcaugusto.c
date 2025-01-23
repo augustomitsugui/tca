@@ -72,7 +72,7 @@ int Nlocal = 0;
 SCategoria *GCategoria;
 int NCat = 0;
 
-//augsuto
+// augsuto
 
 // A U X I L I A R
 void limparTela();
@@ -624,7 +624,8 @@ void listaMenu()
         return;
     }
 }
-SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e){
+SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
+{
     int op = 0, amigop = 0;
     char opc;
     int saida = 1;
@@ -1059,8 +1060,7 @@ void recuperaEncontro()
                     strcpy(GEncontro[NEncontro].nomeencontro, str);
                     GEncontro[NEncontro].enumamigos = 0;
                 }
-
-                if (sep == 1 && c != '$')
+                if (sep == 1 && c != '$') // se o sep for 1 mas nao for mais
                 {
                     sep = 2;
                 }
@@ -1080,7 +1080,6 @@ void recuperaEncontro()
                     GEncontro[NEncontro].enumamigos++;
                     sep = 0;
                 }
-
                 else if (sep == 2) // local encontro
                 {
                     GEncontro[NEncontro].localencontro = (char *)malloc((strlen(str) + 1) * sizeof(char));
@@ -1126,8 +1125,8 @@ void recuperaEncontro()
                 }
             }
         }
-        fclose(pArq);
     }
+    fclose(pArq);
 }
 
 void salvaDado()
@@ -1612,7 +1611,7 @@ void listaAmigosDoEncontro(SEncontro e)
     {
         printf("| %02d.  %-43s  |\n", i + 1, e.amigoencontro[i]);
     }
-    printf("+---------------------------------------------------+\n\n");
+    printf("+---------------------------------------------------+\n");
 }
 
 void listaTodosAmigos()
@@ -1831,7 +1830,7 @@ SEncontro cadastraEncontro(int num)
             erro = 0;
             break;
         }
-        else if (op == Namigo + 1)
+        else if (op == Namigo + 1 && e.enumamigos == 0)
         {
             for (int s = 0; s < Namigo; s++)
             {
@@ -1864,6 +1863,12 @@ SEncontro cadastraEncontro(int num)
             printf("\nAmigos adicionados ao encontro!\n");
             erro = 1;
             pause();
+        }
+        else if ((op == Namigo + 1) && (e.enumamigos > 0))
+        {
+            printf("Nao eh possivel adicionar todos uma vez que voce ja tem um amigo adicionado ao encontro!\nAdicione 1 por 1.\n");
+            pause();
+            erro = 0;
         }
         else
         {
