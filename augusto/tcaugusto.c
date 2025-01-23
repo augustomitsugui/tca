@@ -1069,7 +1069,7 @@ void recuperaEncontro()
                     if (GEncontro[NEncontro].enumamigos == 0)
                     {
                         GEncontro[NEncontro].amigoencontro = (char **)malloc(sizeof(char *));
-                    }
+                    } 
                     else
                     {
                         GEncontro[NEncontro].amigoencontro = (char **)realloc(GEncontro[NEncontro].amigoencontro, (GEncontro[NEncontro].enumamigos + 1) * sizeof(char *));
