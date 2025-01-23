@@ -2466,7 +2466,7 @@ void recuperaencontros()
                 aux[i] = '\0';
                 i = 0;
 
-                if (sep == 0) // nome
+                if (sep == 0) // nome gg
                 {
                     if (numencontros == 0)
                     {
