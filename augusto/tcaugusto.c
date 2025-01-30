@@ -393,6 +393,7 @@ int menuPrincipal()
     printf("+----------------------------------------------+\n\n");
 
     int op = 0;
+
     printf("Insira sua opcao: ");
     scanf("%d", &op);
 
@@ -400,6 +401,9 @@ int menuPrincipal()
     {
     default:
         mensagemErro(-1);
+        return 0;
+        break;
+
     case 1:
         menuAmigo();
         break;
@@ -418,8 +422,10 @@ int menuPrincipal()
     case 6:
         break;
     }
+
     return op;
 }
+
 void menuAmigo()
 
 {
@@ -1045,7 +1051,7 @@ void recuperaEncontro()
                 str[i] = '\0';
                 i = 0;
 
-                if (sep == 0) // nome encontro 
+                if (sep == 0) // nome encontro
                 {
                     if (NEncontro == 0)
                     {
@@ -1069,7 +1075,7 @@ void recuperaEncontro()
                     if (GEncontro[NEncontro].enumamigos == 0)
                     {
                         GEncontro[NEncontro].amigoencontro = (char **)malloc(sizeof(char *));
-                    } 
+                    }
                     else
                     {
                         GEncontro[NEncontro].amigoencontro = (char **)realloc(GEncontro[NEncontro].amigoencontro, (GEncontro[NEncontro].enumamigos + 1) * sizeof(char *));
@@ -1080,6 +1086,7 @@ void recuperaEncontro()
                     GEncontro[NEncontro].enumamigos++;
                     sep = 0;
                 }
+
                 else if (sep == 2) // local encontro
                 {
                     GEncontro[NEncontro].localencontro = (char *)malloc((strlen(str) + 1) * sizeof(char));
