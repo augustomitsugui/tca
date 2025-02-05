@@ -1,0 +1,3 @@
+Cabare;Centro;Paranagua;Av. 123;PR;69;0;
+Cinema;Centro;Paranagua;Rua 77;PR;1294;1;
+Casa do Augusto;porto seguro;guap;av bento munhoz;pr;5276;2;

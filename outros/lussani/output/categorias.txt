@@ -1,0 +1,4 @@
+Jantar;0;1;
+Almoco;1;1;
+Cinema;2;2;
+Resenha;3;2;
