@@ -1,0 +1,35 @@
+Karen
+narek
+11;2;2001;
+kaka@gmail.com
+43 5678987
+Vicente
+Gay
+9;1;2008;
+naoseiusartecnologia@gmail.com
+41 7898578
+Nathan
+Nathanzim
+29;11;2009;
+nathanzimgameplays@gmail.com
+43 67898765
+Diego
+Pai
+6;3;1987;
+diegogaziri@gmail.com
+43 67897567865
+Eloiza
+TogaToga
+11;1;2008;
+eloizaoswald.carvalho@gmail.com
+41 992769711
+Nathamzin
+Half a neuron
+29;11;2009;
+natally@gmail.com
+43 56789876
+Arthur
+Art
+4;10;2008;
+gaziriarthur@gmail.com
+43 996714995

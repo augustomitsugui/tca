@@ -1057,7 +1057,7 @@ void alterarEncontro(int op, int indice)
         {
             printf("Digite a nova descricao do encontro: ");
             gets(strAux);
-        } while (!validaDescricao(strAux));
+        } while (validaDescricao(strAux));
 
         _encontros[indice].descricao = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         validaAlocacao(_encontros[indice].descricao);
