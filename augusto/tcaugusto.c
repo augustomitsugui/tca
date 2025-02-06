@@ -79,7 +79,7 @@ void limparTela();
 void flushs();
 int desejaAlterar();
 int validaData(int dd, int mm, int yy);
-void mensagemErro(int erro);
+void ERRO(int erro);
 void pause();
 int validaHora(int hora, int min);
 void salvandoAviso();
@@ -213,7 +213,7 @@ int TodosOuUmLista()
         }
         else
         {
-            mensagemErro(-1);
+            ERRO(-1);
         }
 
     } while (op < 1 || op > 2);
@@ -282,7 +282,7 @@ int desejaAlterar()
         }
         else
         {
-            mensagemErro(-1);
+            ERRO(-1);
             limparTela();
         }
 
@@ -327,7 +327,7 @@ int validaData(int dd, int mm, int yy)
         return -2;
     }
 }
-void mensagemErro(int erro)
+void ERRO(int erro)
 {
     limparTela();
     printf("\n===============================================================================\n");
@@ -371,6 +371,25 @@ void mensagemErro(int erro)
         printf("ERRO! Nao ha nenhum encontro disponivel!\n");
         printf("Adicione!\n");
         break;
+    case -11:
+        printf("ERRO! Nao ha mais amigos a adicionar!\n");
+        break;
+    case -12:
+        printf("ERRO! Nao eh possivel remover o UNICO AMIGO do encontro!\n");
+        break;
+    case -13:
+        printf("Nao eh possivel adicionar todos uma vez que voce ja tem um amigo adicionado ao encontro!\nAdicione 1 por 1.\n");
+        break;
+    case -14:
+        printf("\nEsse amigo ja foi adicionado ao encontro.\n");
+        printf("Selecione outro amigo.\n\n");
+        break;
+    case -15:
+        printf("\nLocal com este nome ja existe!\n");
+        break;
+    case -16:
+        printf("\nCategoria com este nome ja existe!\n");
+        break;
     }
     printf("===============================================================================\n\n");
     pause();
@@ -400,8 +419,8 @@ int menuPrincipal()
     switch (op)
     {
     default:
-        mensagemErro(-1);
-        return 0;
+        ERRO(-1);
+        op = 0;
         break;
 
     case 1:
@@ -451,8 +470,8 @@ void menuAmigo()
         switch (op)
         {
         default:
-            op = -1;
-            mensagemErro(op);
+            ERRO(-1);
+            return;
         case 1:
             incluiAmigo();
             return;
@@ -490,26 +509,25 @@ void menuLocal()
         printf("Insira sua opcao:\n");
         scanf("%d", &op);
 
-        if (op > 4 || op < 1)
-        {
-            op = -1;
-            mensagemErro(op);
-        }
         switch (op)
         {
+        default:
+            ERRO(-1);
+            break;
         case 1:
             incluiLocal();
-            return;
+            break;
         case 2:
             editaLocal();
-            return;
+            break;
         case 3:
             excluiLocal();
-            return;
+            break;
         case 4:
-            return;
+            break;
         }
     }
+    return;
 }
 void menuCategoria()
 {
@@ -534,101 +552,111 @@ void menuCategoria()
         switch (op)
         {
         default:
-            op = -1;
-            mensagemErro(op);
+            ERRO(-1);
+            break;
         case 1:
             incluiCategoria();
-            return;
+            break;
         case 2:
             editaCategoria();
-            return;
+            break;
         case 3:
             excluiCat();
-            return;
+            break;
         case 4:
-            return;
+            break;
         }
     }
+    return;
 }
 void menuEncontro()
 {
 
-    limparTela();
-    printf("+----------------------------------------------+\n");
-    printf("|                MENU DE ENCONTROS             |\n");
-    printf("+----------------------------------------------+\n");
-    printf("| 1. Adicionar Encontro                        |\n");
-    printf("| 2. Editar Encontro                           |\n");
-    printf("| 3. Excluir Encontro                          |\n");
-    printf("| 4. Voltar                                    |\n");
-    printf("+----------------------------------------------+\n");
-    printf("\n");
-
     int op = 0;
-    printf("Insira sua opcao:\n");
-    scanf("%d", &op);
-
-    switch (op)
+    while (op != 4)
     {
-    default:
-        op = -1;
-        mensagemErro(op);
-    case 1:
-        incluiEncontro();
-        break;
-    case 2:
-        editaEncontro();
-        break;
-    case 3:
-        excluiEncontro();
-        break;
-    case 4:
-        break;
+        limparTela();
+        printf("+----------------------------------------------+\n");
+        printf("|                MENU DE ENCONTROS             |\n");
+        printf("+----------------------------------------------+\n");
+        printf("| 1. Adicionar Encontro                        |\n");
+        printf("| 2. Editar Encontro                           |\n");
+        printf("| 3. Excluir Encontro                          |\n");
+        printf("| 4. Voltar                                    |\n");
+        printf("+----------------------------------------------+\n");
+        printf("\n");
+
+        printf("Insira sua opcao:\n");
+        scanf("%d", &op);
+
+        switch (op)
+        {
+        default:
+            ERRO(-1);
+            break;
+        case 1:
+            incluiEncontro();
+            break;
+        case 2:
+            editaEncontro();
+            break;
+        case 3:
+            excluiEncontro();
+            break;
+        case 4:
+            break;
+        }
     }
+    return;
 }
 void listaMenu()
 {
 
-    limparTela();
-    printf("+----------------------------------------------+\n");
-    printf("|                 MENU DE LISTAS               |\n");
-    printf("+----------------------------------------------+\n");
-    printf("| 1. Listar amigos                             |\n");
-    printf("| 2. Listar locais                             |\n");
-    printf("| 3. Listar categorias                         |\n");
-    printf("| 4. Listar encontros                          |\n");
-    printf("| 5. Relatorio de Encontros por Categoria      |\n");
-    printf("| 6. Voltar                                    |\n");
-    printf("+----------------------------------------------+\n");
-    printf("\n");
-
     int op = 0;
-    printf("Insira sua opcao:\n");
-    scanf("%d", &op);
-
-    switch (op)
+    while (op != 6)
     {
-    default:
-        op = -1;
-        mensagemErro(op);
-    case 1:
-        listaAmigo();
-        return;
-    case 2:
-        listaLocal();
-        return;
-    case 3:
-        listaCat();
-        return;
-    case 4:
-        listaEnc();
-        return;
-    case 5:
-        relaCat();
-        return;
-    case 6:
-        return;
+        limparTela();
+        printf("+----------------------------------------------+\n");
+        printf("|                 MENU DE LISTAS               |\n");
+        printf("+----------------------------------------------+\n");
+        printf("| 1. Listar amigos                             |\n");
+        printf("| 2. Listar locais                             |\n");
+        printf("| 3. Listar categorias                         |\n");
+        printf("| 4. Listar encontros                          |\n");
+        printf("| 5. Relatorio de Encontros por Categoria      |\n");
+        printf("| 6. Voltar                                    |\n");
+        printf("+----------------------------------------------+\n");
+        printf("\n");
+        printf("Insira sua opcao:\n");
+        scanf("%d", &op);
+
+        switch (op)
+        {
+        default:
+            ERRO(-1);
+            break;
+        case 1:
+            listaAmigo();
+            break;
+        case 2:
+            listaLocal();
+            break;
+        case 3:
+            listaCat();
+            break;
+        case 4:
+            listaEnc();
+            break;
+        case 5:
+            relaCat();
+            break;
+            ;
+        case 6:
+            break;
+            ;
+        }
     }
+    return;
 }
 SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
 {
@@ -662,7 +690,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
 
                 if (e.enumamigos == Namigo)
                 {
-                    printf("nao ha mais amigos a adicionar!\n");
+                    ERRO(-11);
                     saida = 0;
                 }
                 else
@@ -680,7 +708,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                     }
                     if (op <= 0 || op > Namigo + 1)
                     {
-                        mensagemErro(-1);
+                        ERRO(-1);
                     }
                     else
                     {
@@ -707,14 +735,14 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                             e.amigoencontro = (char **)realloc(e.amigoencontro, (e.enumamigos + 1) * sizeof(char *));
                             if (e.amigoencontro == NULL)
                             {
-                                mensagemErro(-4);
+                                ERRO(-4);
                                 break;
                             }
 
                             e.amigoencontro[e.enumamigos] = (char *)malloc(strlen(GAmigo[op - 1].nome) + 1);
                             if (e.amigoencontro[e.enumamigos] == NULL)
                             {
-                                mensagemErro(-4);
+                                ERRO(-4);
                                 break;
                             }
 
@@ -744,7 +772,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
 
                 if (e.enumamigos == 1)
                 {
-                    printf("Nao e possivel remover amigo do encontro. Existe apenas 1 amigo nesse encontro.\n");
+                    ERRO(-12);
                     return e;
                 }
                 else
@@ -757,7 +785,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
 
                     if (amigop <= 0 || amigop > e.enumamigos + 1)
                     {
-                        mensagemErro(-1);
+                        ERRO(-1);
                     }
                     else if (op == e.enumamigos + 1)
                     {
@@ -769,13 +797,7 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                         printf("\nDeseja realmente remover [ %s ]? (S/N)\n", e.amigoencontro[amigop - 1]);
                         scanf(" %c", &opc);
 
-                        if (opc == 'N' || opc == 'n')
-                        {
-                            printf("Voce escolheu [N]; Voltando...\n");
-                            pause();
-                            break;
-                        }
-                        else if (opc == 'S' || opc == 's')
+                        if (opc == 'S' || opc == 's')
                         {
                             free(e.amigoencontro[amigop - 1]);
 
@@ -802,7 +824,9 @@ SEncontro menuEditaAmigoEncontro(int numenc, SEncontro e)
                         }
                         else
                         {
-                            printf("Opcao invalida. Por favor, escolha 'S' para Sim ou 'N' para Nao.\n");
+                            printf("Alteracao cancelada!!");
+                            pause();
+                            return e;
                         }
                     }
                 }
@@ -1454,7 +1478,7 @@ void listaAmigo()
     int op;
     if (Namigo < 1)
     {
-        mensagemErro(-7);
+        ERRO(-7);
         return;
     }
     else if (Namigo == 1)
@@ -1488,7 +1512,7 @@ void listaLocal()
     int op;
     if (Nlocal < 1)
     {
-        mensagemErro(-8);
+        ERRO(-8);
         return;
     }
     else if (Nlocal == 1)
@@ -1522,7 +1546,7 @@ void listaCat()
     int op;
     if (NCat < 1)
     {
-        mensagemErro(-9);
+        ERRO(-9);
         return;
     }
 
@@ -1559,7 +1583,7 @@ void listaEnc()
     int op;
     if (NEncontro < 1)
     {
-        mensagemErro(-10);
+        ERRO(-10);
         return;
     }
 
@@ -1598,7 +1622,8 @@ void listaTodosEncontros()
     limparTela();
     if (NEncontro < 1)
     {
-        printf("nao existem encontros! adicione um!\n");
+        ERRO(-10);
+        return;
     }
     else
     {
@@ -1626,7 +1651,8 @@ void listaTodosAmigos()
     limparTela();
     if (Namigo < 1)
     {
-        printf("Nao existem amigos! adicione um amigo!\n");
+        ERRO(-7);
+        return;
     }
     else
     {
@@ -1642,10 +1668,8 @@ void listaTodosLocais()
     limparTela();
     if (Nlocal < 1)
     {
-        printf("+--------------------------------------------------+\n");
-        printf("|               Não existem locais!                |\n");
-        printf("|               Adicione um local!                 |\n");
-        printf("+--------------------------------------------------+\n");
+        ERRO(-8);
+        return;
     }
     else
     {
@@ -1661,7 +1685,8 @@ void listaTodasCategorias()
     limparTela();
     if (NCat < 1)
     {
-        printf("nao existem cateogiras! adicione!\n");
+        ERRO(-9);
+        return;
     }
     else
     {
@@ -1681,7 +1706,7 @@ void relaCat()
 
     if (NEncontro < 1)
     {
-        mensagemErro(-10);
+        ERRO(-10);
         return;
     }
 
@@ -1775,6 +1800,7 @@ void incluiEncontro()
 
         printf("\nVolte ao menu e crie as opcões necessarias!\n");
         pause();
+        return;
     }
 
     else
@@ -1791,6 +1817,7 @@ void incluiEncontro()
 
         GEncontro[NEncontro] = cadastraEncontro(NEncontro);
         NEncontro++;
+        return;
     }
 }
 SEncontro cadastraEncontro(int num)
@@ -1833,7 +1860,7 @@ SEncontro cadastraEncontro(int num)
 
         if (op < 1 || ((op > Namigo && Namigo == 1) || (op > Namigo + 1)))
         {
-            mensagemErro(-1);
+            ERRO(-1);
             erro = 0;
             break;
         }
@@ -1852,7 +1879,7 @@ SEncontro cadastraEncontro(int num)
 
                 if (e.amigoencontro == NULL)
                 {
-                    mensagemErro(-4);
+                    ERRO(-4);
                     break;
                 }
 
@@ -1860,7 +1887,7 @@ SEncontro cadastraEncontro(int num)
 
                 if (e.amigoencontro[e.enumamigos] == NULL)
                 {
-                    mensagemErro(-4);
+                    ERRO(-4);
                     break;
                 }
 
@@ -1873,8 +1900,7 @@ SEncontro cadastraEncontro(int num)
         }
         else if ((op == Namigo + 1) && (e.enumamigos > 0))
         {
-            printf("Nao eh possivel adicionar todos uma vez que voce ja tem um amigo adicionado ao encontro!\nAdicione 1 por 1.\n");
-            pause();
+            ERRO(-13);
             erro = 0;
         }
         else
@@ -1892,9 +1918,7 @@ SEncontro cadastraEncontro(int num)
 
             if (amigoDuplicado)
             {
-                printf("\nEsse amigo ja foi adicionado ao encontro.\n");
-                printf("Selecione outro amigo.\n\n");
-                pause();
+                ERRO(-14);
             }
 
             else
@@ -1910,7 +1934,7 @@ SEncontro cadastraEncontro(int num)
 
                 if (e.amigoencontro == NULL)
                 {
-                    mensagemErro(-4);
+                    ERRO(-4);
                     break;
                 }
 
@@ -1918,7 +1942,7 @@ SEncontro cadastraEncontro(int num)
 
                 if (e.amigoencontro[e.enumamigos] == NULL)
                 {
-                    mensagemErro(-4);
+                    ERRO(-4);
                     break;
                 }
 
@@ -1949,7 +1973,7 @@ SEncontro cadastraEncontro(int num)
                     }
                     else
                     {
-                        mensagemErro(-1);
+                        ERRO(-1);
                     }
                 }
                 else
@@ -1976,7 +2000,7 @@ SEncontro cadastraEncontro(int num)
 
         if (erro != 1)
         {
-            mensagemErro(erro);
+            ERRO(-2);
         }
     }
     erro = 0;
@@ -1993,14 +2017,14 @@ SEncontro cadastraEncontro(int num)
 
         if (op <= 0 || op > Nlocal)
         {
-            mensagemErro(-1);
+            ERRO(-1);
         }
         else
         {
             e.localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
             if (e.localencontro == NULL)
             {
-                mensagemErro(-4);
+                ERRO(-4);
                 break;
             }
             strcpy(e.localencontro, GLocal[op - 1].nomelocal);
@@ -2021,14 +2045,14 @@ SEncontro cadastraEncontro(int num)
 
         if (op <= 0 || op > NCat)
         {
-            mensagemErro(-1);
+            ERRO(-1);
         }
         else
         {
             e.categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
             if (e.categoriaencontro == NULL)
             {
-                mensagemErro(-4);
+                ERRO(-4);
                 break;
             }
             strcpy(e.categoriaencontro, GCategoria[op - 1].nomecat);
@@ -2049,7 +2073,7 @@ SEncontro cadastraEncontro(int num)
 
         if (verificadorhora == -5)
         {
-            mensagemErro(-5);
+            ERRO(-5);
         }
         else
         {
@@ -2098,7 +2122,7 @@ SAmigo cadastraAmigo(int num)
     char strAux[100];
     int erro = 0;
 
-    while (erro != 1)
+    while (!erro)
     {
         limparTela();
         printf("-- Adicionando Amigo --\n\n");
@@ -2122,19 +2146,18 @@ SAmigo cadastraAmigo(int num)
 
             if (amigoDuplicado)
             {
-                mensagemErro(-3);
-                erro = 2;
+                ERRO(-3);
+                erro = 0;
             }
             else
             {
                 a.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
                 if (a.nome == NULL)
                 {
-                    mensagemErro(-4);
+                    ERRO(-4);
                     break;
                 }
                 strcpy(a.nome, strAux);
-                erro = 1;
             }
         }
         else
@@ -2143,11 +2166,10 @@ SAmigo cadastraAmigo(int num)
 
             if (a.nome == NULL)
             {
-                mensagemErro(-4);
+                ERRO(-4);
                 break;
             }
             strcpy(a.nome, strAux);
-            erro = 1;
         }
     }
 
@@ -2182,7 +2204,7 @@ SAmigo cadastraAmigo(int num)
     flushs();
 
     erro = 0;
-    while (erro != 1)
+    while (!erro)
     {
         limparTela();
         printf("-- Adicionando Amigo --\n\n");
@@ -2192,9 +2214,9 @@ SAmigo cadastraAmigo(int num)
 
         erro = validaData(a.datanasc.dia, a.datanasc.mes, a.datanasc.ano);
 
-        if (erro != 1)
+        if (!erro)
         {
-            mensagemErro(erro);
+            ERRO(-2);
         }
     }
 
@@ -2233,25 +2255,18 @@ SLocal cadastraLocal(int num)
         gets(strAux);
         flushs();
 
-        erro = 0;
+        erro = 1;
 
         for (int i = 0; i < Nlocal; i++)
         {
             if (strcmp(GLocal[i].nomelocal, strAux) == 0)
             {
-                erro = 1;
-                printf("\nLocal com este nome ja existe!\n");
-                pause();
-                break;
+                erro = 0;
+                ERRO(-15);
             }
         }
 
-        if (!erro)
-        {
-            break;
-        }
-
-    } while (1);
+    } while (!erro);
 
     l.nomelocal = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
     strcpy(l.nomelocal, strAux);
@@ -2349,8 +2364,7 @@ SCategoria cadastraCategoria(int num)
             {
                 if (strcmp(GCategoria[i].nomecat, strAux) == 0)
                 {
-                    printf("\nCategoria com este nome ja existe!\n");
-                    pause();
+                    ERRO(-16);
                     erro = 1;
                 }
                 else
@@ -2386,7 +2400,7 @@ void editaAmigo()
         int op = 0;
         if (Namigo == 0)
         {
-            mensagemErro(-7);
+            ERRO(-7);
             return;
         }
 
@@ -2400,8 +2414,7 @@ void editaAmigo()
             scanf("%d", &op);
             if (op < 1 || op > Namigo + 1)
             {
-                op = -1;
-                mensagemErro(op);
+                ERRO(-1);
             }
             else if (op == Namigo + 1)
             {
@@ -2456,7 +2469,7 @@ void editaAmigo()
         if (op > 6 || op < 1)
         {
             op = -1;
-            mensagemErro(op);
+            ERRO(op);
         }
         if (op == 6)
         {
@@ -2573,7 +2586,7 @@ void switchAmigo(int op, int amigo)
             scanf("%d", &opaux);
             if (opaux < 1 || opaux > 3)
             {
-                mensagemErro(-1);
+                ERRO(-1);
             }
         }
 
@@ -2630,7 +2643,7 @@ void switchAmigo(int op, int amigo)
         break;
 
     default:
-        mensagemErro(-1);
+        ERRO(-1);
         break;
     }
     return;
@@ -2644,7 +2657,7 @@ void editaLocal()
         int op = 0;
         if (Nlocal == 0)
         {
-            mensagemErro(-8);
+            ERRO(-8);
             return;
         }
         while (op < 1 || op > Nlocal)
@@ -2659,7 +2672,7 @@ void editaLocal()
             if (op < 1 || op > Nlocal + 1)
             {
                 op = -1;
-                mensagemErro(op);
+                ERRO(op);
             }
             else if (op == Nlocal + 1)
             {
@@ -2717,7 +2730,7 @@ void editaLocal()
         if (op > 7 || op < 1)
         {
             op = -1;
-            mensagemErro(op);
+            ERRO(op);
         }
         if (op == 7)
         {
@@ -2874,7 +2887,7 @@ void switchLocal(int op, int Local)
         break;
 
     default:
-        mensagemErro(-1);
+        ERRO(-1);
         break;
     }
 
@@ -2889,7 +2902,7 @@ void editaCategoria()
         int op = 0;
         if (NCat == 0)
         {
-            mensagemErro(-9);
+            ERRO(-9);
             return;
         }
         while (op < 1 || op > NCat)
@@ -2903,8 +2916,7 @@ void editaCategoria()
             scanf("%d", &op);
             if (op < 1 || op > NCat + 1)
             {
-                op = -1;
-                mensagemErro(op);
+                ERRO(-1);
             }
             else if (op == NCat + 1)
             {
@@ -2958,7 +2970,7 @@ void editaCategoria()
         if (op > 2 || op < 1)
         {
             op = -1;
-            mensagemErro(op);
+            ERRO(-1);
         }
         if (op == 2)
         {
@@ -3008,7 +3020,7 @@ void switchCat(int op, int cat)
         break;
 
     default:
-        mensagemErro(-1);
+        ERRO(-1);
         break;
     }
 
@@ -3023,7 +3035,7 @@ void editaEncontro()
         int op = 0;
         if (NEncontro == 0)
         {
-            mensagemErro(-10);
+            ERRO(-10);
             return;
         }
 
@@ -3040,7 +3052,7 @@ void editaEncontro()
             if (op < 1 || op > NEncontro + 1)
             {
                 op = -1;
-                mensagemErro(op);
+                ERRO(op);
             }
             else if (op == NEncontro + 1)
             {
@@ -3068,7 +3080,7 @@ void editaEncontro()
         if (op > 8 || op < 1)
         {
             op = -1;
-            mensagemErro(op);
+            ERRO(op);
         }
         if (op == 8)
         {
@@ -3171,7 +3183,7 @@ void switchEncontro(int op, int encontro)
 
                 if (op <= 0 || op > Nlocal)
                 {
-                    mensagemErro(-1);
+                    ERRO(-1);
                 }
                 else
                 {
@@ -3185,7 +3197,7 @@ void switchEncontro(int op, int encontro)
                         GEncontro[encontro].localencontro = (char *)malloc(strlen(GLocal[op - 1].nomelocal) + 1);
                         if (GEncontro[encontro].localencontro == NULL)
                         {
-                            mensagemErro(-4);
+                            ERRO(-4);
                             break;
                         }
                         strcpy(GEncontro[encontro].localencontro, GLocal[op - 1].nomelocal);
@@ -3216,7 +3228,7 @@ void switchEncontro(int op, int encontro)
 
                 if (op <= 0 || op > NCat)
                 {
-                    mensagemErro(-1);
+                    ERRO(-1);
                 }
                 else
                 {
@@ -3230,7 +3242,7 @@ void switchEncontro(int op, int encontro)
                         GEncontro[encontro].categoriaencontro = (char *)malloc(strlen(GCategoria[op - 1].nomecat) + 1);
                         if (GEncontro[encontro].categoriaencontro == NULL)
                         {
-                            mensagemErro(-4);
+                            ERRO(-4);
                             break;
                         }
                         strcpy(GEncontro[encontro].categoriaencontro, GCategoria[op - 1].nomecat);
@@ -3251,7 +3263,7 @@ void switchEncontro(int op, int encontro)
             erro = validaData(ad, am, aa);
             if (!erro)
             {
-                mensagemErro(erro);
+                ERRO(erro);
             }
         }
         GEncontro[encontro].dataencontro.dia = ad;
@@ -3269,7 +3281,7 @@ void switchEncontro(int op, int encontro)
             erro = validaHora(ah, amin);
             if (!erro)
             {
-                mensagemErro(-5);
+                ERRO(-5);
             }
         }
         GEncontro[encontro].horaencontro.hora = ah;
@@ -3305,7 +3317,7 @@ void switchEncontro(int op, int encontro)
         break;
 
     default:
-        mensagemErro(-1);
+        ERRO(-1);
         break;
     }
     return;
@@ -3317,7 +3329,7 @@ void excluiAmigo()
     int amgencontro[NEncontro], linked = 0;
     if (Namigo < 1)
     {
-        mensagemErro(-7);
+        ERRO(-7);
         return;
     }
 
@@ -3337,7 +3349,7 @@ void excluiAmigo()
 
         if (op > Namigo + 1 || op < 1)
         {
-            mensagemErro(-1);
+            ERRO(-1);
         }
         else if (NEncontro > 0)
         {
@@ -3411,7 +3423,7 @@ void excluiAmigo()
 
         {
             op = -1;
-            mensagemErro(op);
+            ERRO(op);
             limparTela();
         }
 
@@ -3423,7 +3435,7 @@ void excluiLocal()
     int locencontro[NEncontro], linked = 0;
     if (Nlocal < 1)
     {
-        mensagemErro(-8);
+        ERRO(-8);
         return;
     }
 
@@ -3443,7 +3455,7 @@ void excluiLocal()
 
         if (op > Nlocal || op < 1)
         {
-            mensagemErro(-1);
+            ERRO(-1);
         }
         else if (NEncontro > 0)
         {
@@ -3512,21 +3524,12 @@ void excluiLocal()
             pause();
             return;
         }
-
-        else if (opc == 'N' || opc == 'n')
+        else
         {
             limparTela();
-            printf("Voce escolheu [N]; Voltando para menu principal. . . ");
-            printf("\n");
+            printf("\nVoltando para menu principal. . . \n");
             pause();
             return;
-        }
-        else
-
-        {
-            op = -1;
-            mensagemErro(op);
-            limparTela();
         }
 
     } while (opc != 'S' || opc != 's' || opc != 'N' || opc != 'n');
@@ -3536,7 +3539,7 @@ void excluiCat()
     int catencontro[NEncontro], linked = 0;
     if (NCat < 1)
     {
-        mensagemErro(-9);
+        ERRO(-9);
         return;
     }
 
@@ -3555,7 +3558,7 @@ void excluiCat()
         }
         if (op > NCat || op < 1)
         {
-            mensagemErro(-1);
+            ERRO(-1);
         }
         else if (NEncontro > 0)
         {
@@ -3623,20 +3626,13 @@ void excluiCat()
             pause();
             return;
         }
-        else if (opc == 'N' || opc == 'n')
+
+        else
         {
             limparTela();
-            printf("Voce escolheu [N]; Voltando para menu. . . ");
+            printf("\nVoltando para menu. . . ");
             printf("\n");
             pause();
-            return;
-        }
-        else
-
-        {
-            op = -1;
-            mensagemErro(op);
-            limparTela();
             return;
         }
 
@@ -3650,7 +3646,7 @@ void excluiEncontro()
 
     if (NEncontro == 0)
     {
-        mensagemErro(-10);
+        ERRO(-10);
         return;
     }
     else
@@ -3669,7 +3665,7 @@ void excluiEncontro()
 
             if (op < 1 || op > NEncontro + 1)
             {
-                mensagemErro(-1);
+                ERRO(-1);
             }
             else
             {
@@ -3681,7 +3677,7 @@ void excluiEncontro()
                 else
                 {
                     limparTela();
-                    printf("Deseja mesmo excluir encontro [ %s ]?\n1. Sim\n2.Nao\n", GEncontro[op - 1].nomeencontro);
+                    printf("Deseja mesmo excluir o encontro [ %s ]?\n1. Sim\n2.Nao\n", GEncontro[op - 1].nomeencontro);
                     scanf("%d", &opaux);
 
                     if (opaux != 1)
