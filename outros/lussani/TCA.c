@@ -67,15 +67,15 @@ typedef struct
 typedef struct
 {
     TAmigo **amigos;
-    int *amigosID;
+    char **amigosID;
     int numAmigos;
     TCategoria **categorias;
-    int *categoriasID;
+    char **categoriasID;
     int numCategorias;
     TData data;
     THora horario;
     TLocal *local;
-    int localID;
+    char *localID;
     char *descricao;
 } TEncontro;
 
@@ -614,18 +614,22 @@ TEncontro criarEncontro()
         if (encontro.numAmigos == 0)
         {
             encontro.amigos = (TAmigo **)malloc(1 * sizeof(TAmigo *));
-            encontro.amigosID = (int *)malloc(1 * sizeof(int));
+            encontro.amigosID = (char **)malloc(1 * sizeof(char*));
         }
         else
         {
             encontro.amigos = (TAmigo **)realloc(encontro.amigos, (encontro.numAmigos + 1) * sizeof(TAmigo *));
-            encontro.amigosID = (int *)realloc(encontro.amigosID, (encontro.numAmigos + 1) * sizeof(int));
+            encontro.amigosID = (char **)realloc(encontro.amigosID, (encontro.numAmigos + 1) * sizeof(char*));
         }
         validaAlocacao(encontro.amigos);
         validaAlocacao(encontro.amigosID);
 
         encontro.amigos[encontro.numAmigos] = &_amigos[indice];
-        encontro.amigosID[encontro.numAmigos] = _amigos[indice].id;
+
+        encontro.amigosID[encontro.numAmigos] = (char *)malloc((strlen(_amigos[indice].nome) + 1) * sizeof(char));
+        validaAlocacao(encontro.amigosID[encontro.numAmigos]);
+        strcpy(encontro.amigosID[encontro.numAmigos], _amigos[indice].nome);
+
         encontro.numAmigos++;
 
         if (encontro.numAmigos == _numAmigos)
@@ -670,7 +674,11 @@ TEncontro criarEncontro()
         }
     } while (indice < 0 || indice >= _numLocais);
     encontro.local = &_local[indice];
-    encontro.localID = _local[indice].id;
+
+    encontro.localID = (char *)malloc(strlen(_local[indice].nome) + 1);
+    validaAlocacao(encontro.localID);
+    strcpy(encontro.localID, _local[indice].nome);
+
     printf("\nLocal adicionado com sucesso!\n");
 
     encontro.numCategorias = 0;
@@ -714,18 +722,22 @@ TEncontro criarEncontro()
         if (encontro.numCategorias == 0)
         {
             encontro.categorias = (TCategoria **)malloc(1 * sizeof(TCategoria *));
-            encontro.categoriasID = (int *)malloc(1 * sizeof(int));
+            encontro.categoriasID = (char **)malloc(1 * sizeof(char*));
         }
         else
         {
             encontro.categorias = (TCategoria **)realloc(encontro.categorias, (encontro.numCategorias + 1) * sizeof(TCategoria *));
-            encontro.categoriasID = (int *)realloc(encontro.categoriasID, (encontro.numCategorias + 1) * sizeof(int));
+            encontro.categoriasID = (char **)realloc(encontro.categoriasID, (encontro.numCategorias + 1) * sizeof(char*));
         }
         validaAlocacao(encontro.categorias);
         validaAlocacao(encontro.categoriasID);
 
         encontro.categorias[encontro.numCategorias] = &_categorias[indice];
-        encontro.categoriasID[encontro.numCategorias] = _categorias[indice].id;
+
+        encontro.categoriasID[encontro.numCategorias] = (char *)malloc((strlen(_categorias[indice].nome) + 1) * sizeof(char));
+        validaAlocacao(encontro.categoriasID[encontro.numCategorias]);
+        strcpy(encontro.categoriasID[encontro.numCategorias], _categorias[indice].nome);
+
         encontro.numCategorias++;
         _categorias[indice].numEncontros++;
 
@@ -842,7 +854,7 @@ void OpcaoAlterarEncontro()
         do
         {
             listarEncontros(0);
-            printf("Qual encontro deseja alterar [%d-%d]?\n", 1, _numEncontros);
+            printf("\nQual encontro deseja alterar [%d-%d]?\n", 1, _numEncontros);
             printf("Digite o indice ou descricao: ");
             gets(strAux);
 
@@ -1057,7 +1069,7 @@ void alterarEncontro(int op, int indice)
         {
             printf("Digite a nova descricao do encontro: ");
             gets(strAux);
-        } while (validaDescricao(strAux));
+        } while (!validaDescricao(strAux));
 
         _encontros[indice].descricao = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         validaAlocacao(_encontros[indice].descricao);
@@ -1180,7 +1192,10 @@ void alterarLocalDeEncontro(int indice)
     }
 
     _encontros[indice].local = &_local[index];
-    _encontros[indice].localID = index;
+
+    _encontros[indice].localID = (char*)malloc((strlen(_local[index].nome) + 1) * sizeof(char));
+    validaAlocacao(_encontros[indice].localID);
+    strcpy(_encontros[indice].localID, _local[index].nome);
 
     CLS
         printf("Local alterado com sucesso!\n");
@@ -1255,13 +1270,16 @@ void alterarAmigosDeEncontros(int indice)
             printf("Deseja realmente subistituir o(a) %s pelo(a) %s? [S/N]: ", _amigos[index].nome, _amigos[id].nome);
             scanf("%c", &op);
             fflush(stdin);
+
             op = tolower(op);
         } while (validaSimNao(op));
 
         if (op == 's')
         {
             _encontros[indice].amigos[index] = &_amigos[id];
-            _encontros[indice].amigosID[index] = id;
+            _encontros[indice].amigosID[index] = (char*)malloc((strlen(_amigos[id].nome) + 1) * sizeof(char));
+            validaAlocacao(_encontros[indice].amigosID[index]);
+            strcpy(_encontros[indice].amigosID[index], _amigos[id].nome);
             break;
         }
         else if (op == 'n')
@@ -1336,6 +1354,7 @@ void incluirAmigosEmEncontros(int indice)
             printf("Deseja adicionar o(a) %s ao encontro? [S/N]: ", _amigos[index].nome);
             scanf("%c", &op);
             fflush(stdin);
+
             op = tolower(op);
         } while (validaSimNao(op));
 
@@ -1347,11 +1366,15 @@ void incluirAmigosEmEncontros(int indice)
         _encontros[indice].amigos = (TAmigo **)realloc(_encontros[indice].amigos, (_encontros[indice].numAmigos + 1) * sizeof(TAmigo *));
         validaAlocacao(_encontros[indice].amigos);
 
-        _encontros[indice].amigosID = (int *)realloc(_encontros[indice].amigosID, (_encontros[indice].numAmigos + 1) * sizeof(int));
+        _encontros[indice].amigosID = (char **)realloc(_encontros[indice].amigosID, (_encontros[indice].numAmigos + 1) * sizeof(char*));
         validaAlocacao(_encontros[indice].amigosID);
 
         _encontros[indice].amigos[_encontros[indice].numAmigos] = &_amigos[index];
-        _encontros[indice].amigosID[_encontros[indice].numAmigos] = index;
+
+        _encontros[indice].amigosID[_encontros[indice].numAmigos] = (char*)malloc((strlen(_amigos[index].nome) + 1) * sizeof(char));
+        validaAlocacao(_encontros[indice].amigosID[_encontros[indice].numAmigos]);
+        strcpy(_encontros[indice].amigosID[_encontros[indice].numAmigos], _amigos[index].nome);
+
         _encontros[indice].numAmigos++;
 
         if (_encontros[indice].numAmigos == _numAmigos)
@@ -1363,6 +1386,7 @@ void incluirAmigosEmEncontros(int indice)
             printf("Deseja adicionar outro amigo? [S/N]: ");
             scanf("%c", &op);
             fflush(stdin);
+
             op = tolower(op);
         } while (validaSimNao(op));
 
@@ -1444,13 +1468,13 @@ void excluirAmigoDeEncontro(int index, int indice)
     for (int i = index; i < _encontros[indice].numAmigos; i++)
     {
         _encontros[indice].amigos[i] = _encontros[indice].amigos[i + 1];
-        _encontros[indice].amigosID[i] = _encontros[indice].amigosID[i + 1];
+        strcpy(_encontros[indice].amigosID[i], _encontros[indice].amigosID[i + 1]);
     }
 
     _encontros[indice].amigos = (TAmigo **)realloc(_encontros[indice].amigos, (_encontros[indice].numAmigos - 1) * sizeof(TAmigo *));
     validaAlocacao(_encontros[indice].amigos);
 
-    _encontros[indice].amigosID = (int *)realloc(_encontros[indice].amigosID, (_encontros[indice].numAmigos - 1) * sizeof(int));
+    _encontros[indice].amigosID = (char **)realloc(_encontros[indice].amigosID, (_encontros[indice].numAmigos - 1) * sizeof(char*));
     validaAlocacao(_encontros[indice].amigosID);
 
     _encontros[indice].numAmigos--;
@@ -1505,11 +1529,15 @@ void incluirCategoriasEmEncontros(int indice)
     _encontros[indice].categorias = (TCategoria **)realloc(_encontros[indice].categorias, (_encontros[indice].numCategorias + 1) * sizeof(TCategoria *));
     validaAlocacao(_encontros[indice].categorias);
 
-    _encontros[indice].categoriasID = (int *)realloc(_encontros[indice].categoriasID, (_encontros[indice].numCategorias + 1) * sizeof(int));
+    _encontros[indice].categoriasID = (char **)realloc(_encontros[indice].categoriasID, (_encontros[indice].numCategorias + 1) * sizeof(char*));
     validaAlocacao(_encontros[indice].categoriasID);
 
     _encontros[indice].categorias[_encontros[indice].numCategorias] = &_categorias[index];
-    _encontros[indice].categoriasID[_encontros[indice].numCategorias] = index;
+
+    _encontros[indice].categoriasID[_encontros[indice].numCategorias] = (char *)malloc(strlen(_categorias[index].nome) + 1);
+    validaAlocacao(_encontros[indice].categoriasID[_encontros[indice].numCategorias]);
+    strcpy(_encontros[indice].categoriasID[_encontros[indice].numCategorias], _categorias[index].nome);
+
     _encontros[indice].numCategorias++;
 
     CLS
@@ -1585,13 +1613,14 @@ void alterarCategoriasDeEncontros(int indice)
             printf("Deseja realmente subistituir o(a) %s pelo(a) %s? [S/N]: ", _categorias[index].nome, _categorias[id].nome);
             scanf("%c", &op);
             fflush(stdin);
+
             op = tolower(op);
         } while (validaSimNao(op));
 
         if (op == 's')
         {
             _encontros[indice].categorias[index] = &_categorias[id];
-            _encontros[indice].categoriasID[index] = id;
+            strcpy(_encontros[indice].categoriasID[index], _categorias[id].nome);
             break;
         }
         else if (op == 'n')
@@ -1660,13 +1689,13 @@ void excluirCateoriasDeEncontro(int index, int indice)
     for (int i = index; i < _encontros[indice].numCategorias; i++)
     {
         _encontros[indice].categorias[i] = _encontros[indice].categorias[i + 1];
-        _encontros[indice].categoriasID[i] = _encontros[indice].categoriasID[i + 1];
+        strcpy(_encontros[indice].categoriasID[i], _encontros[indice].categoriasID[i + 1]);
     }
 
     _encontros[indice].categorias = (TCategoria **)realloc(_encontros[indice].categorias, (_encontros[indice].numCategorias - 1) * sizeof(TCategoria *));
     validaAlocacao(_encontros[indice].categorias);
 
-    _encontros[indice].categoriasID = (int *)realloc(_encontros[indice].categoriasID, (_encontros[indice].numCategorias - 1) * sizeof(int));
+    _encontros[indice].categoriasID = (char **)realloc(_encontros[indice].categoriasID, (_encontros[indice].numCategorias - 1) * sizeof(char*));
     validaAlocacao(_encontros[indice].categoriasID);
 
     _encontros[indice].numCategorias--;
@@ -1719,7 +1748,7 @@ void OpcaoListarEncontro()
             do
             {
                 listarEncontros(0);
-                printf("Qual encontro deseja exibir [%d-%d]?\n", 1, _numEncontros);
+                printf("\nQual encontro deseja exibir [%d-%d]?\n", 1, _numEncontros);
                 printf("Digite o indice ou descricao: ");
                 gets(strAux);
 
@@ -1746,6 +1775,7 @@ void OpcaoListarEncontro()
     else
     {
         listarEncontros(1);
+        SPAUSE
     }
 }
 
@@ -1765,7 +1795,6 @@ void listarEncontros(int detalhar)
     for (int i = 0; i < _numEncontros; i++)
     {
         exibeEncontro(_encontros[i], i + 1, detalhar);
-        printf("\n");
     }
 }
 
@@ -1773,7 +1802,7 @@ void exibeEncontro(TEncontro encontro, int i, int detalhar)
 {
     if (!detalhar)
     {
-        printf("Encontro[%d] - %s\n", i, encontro.descricao);
+        printf("Encontro[%d] - %s", i, encontro.descricao);
     }
     else
     {
@@ -1805,8 +1834,9 @@ void exibeEncontro(TEncontro encontro, int i, int detalhar)
         }
         printf("Data: %.2d/%.2d/%d\n", encontro.data.dia, encontro.data.mes, encontro.data.ano);
         printf("Horario: %d:%.2d\n", encontro.horario.hora, encontro.horario.min);
-        printf("Descricao: %s\n\n", encontro.descricao);
+        printf("Descricao: %s\n", encontro.descricao);
     }
+    printf("\n");
 }
 
 void OpcaoExcluirEncontro()
@@ -1826,7 +1856,7 @@ void OpcaoExcluirEncontro()
         do
         {
             listarEncontros(0);
-            printf("Qual encontro deseja excluir [%d-%d]?\n", 1, _numEncontros);
+            printf("\nQual encontro deseja excluir [%d-%d]?\n", 1, _numEncontros);
             printf("Digite o indice ou descricao: ");
             gets(strAux);
 
@@ -1873,6 +1903,15 @@ void OpcaoExcluirEncontro()
 
 void excluirEncontro(int indice)
 {
+    for(int j = 0; j < _numCategorias; j++){
+        for(int k = 0; k < _encontros[indice].numCategorias; k++){
+            if (strcmp(_encontros[indice].categoriasID[k], _categorias[j].nome) == 0)
+            {
+                _categorias[j].numEncontros--;
+            }
+        }
+    }
+
     for (int i = indice; i < _numEncontros; i++)
     {
         _encontros[i] = _encontros[i + 1];
@@ -1987,7 +2026,9 @@ void carregarEncontros()
                     {
                         id = atoi(strAux);
                         _encontros[_numEncontros].local = &_local[id];
-                        _encontros[_numEncontros].localID = id;
+                        _encontros[_numEncontros].localID = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_encontros[_numEncontros].localID);
+                        strcpy(_encontros[_numEncontros].localID, _local[id].nome);
                         sep++;
                     }
                     else if (sep == 6)
@@ -2003,12 +2044,12 @@ void carregarEncontros()
                     if (_encontros[_numEncontros].numAmigos == 0)
                     {
                         _encontros[_numEncontros].amigos = (TAmigo **)malloc(1 * sizeof(TAmigo *));
-                        _encontros[_numEncontros].amigosID = (int *)malloc(1 * sizeof(int));
+                        _encontros[_numEncontros].amigosID = (char **)malloc(1 * sizeof(char*));
                     }
                     else
                     {
                         _encontros[_numEncontros].amigos = (TAmigo **)realloc(_encontros[_numEncontros].amigos, (_encontros[_numEncontros].numAmigos + 1) * sizeof(TAmigo *));
-                        _encontros[_numEncontros].amigosID = (int *)realloc(_encontros[_numEncontros].amigosID, (_encontros[_numEncontros].numAmigos + 1) * sizeof(int));
+                        _encontros[_numEncontros].amigosID = (char **)realloc(_encontros[_numEncontros].amigosID, (_encontros[_numEncontros].numAmigos + 1) * sizeof(char*));
                     }
                     validaAlocacao(_encontros[_numEncontros].amigos);
                     validaAlocacao(_encontros[_numEncontros].amigosID);
@@ -2017,7 +2058,11 @@ void carregarEncontros()
                     j = _encontros[_numEncontros].numAmigos;
 
                     _encontros[_numEncontros].amigos[j] = &_amigos[id];
-                    _encontros[_numEncontros].amigosID[j] = id;
+
+                    _encontros[_numEncontros].amigosID[j] = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                    validaAlocacao(_encontros[_numEncontros].amigosID[j]);
+                    strcpy(_encontros[_numEncontros].amigosID[j], _amigos[id].nome);
+
                     _encontros[_numEncontros].numAmigos++;
                 }
                 else if (c == '#')
@@ -2025,12 +2070,12 @@ void carregarEncontros()
                     if (_encontros[_numEncontros].numCategorias == 0)
                     {
                         _encontros[_numEncontros].categorias = (TCategoria **)malloc(1 * sizeof(TCategoria *));
-                        _encontros[_numEncontros].categoriasID = (int *)malloc(1 * sizeof(int));
+                        _encontros[_numEncontros].categoriasID = (char **)malloc(1 * sizeof(char*));
                     }
                     else
                     {
                         _encontros[_numEncontros].categorias = (TCategoria **)realloc(_encontros[_numEncontros].categorias, (_encontros[_numEncontros].numCategorias + 1) * sizeof(TCategoria *));
-                        _encontros[_numEncontros].categoriasID = (int *)realloc(_encontros[_numEncontros].categoriasID, (_encontros[_numEncontros].numCategorias + 1) * sizeof(int));
+                        _encontros[_numEncontros].categoriasID = (char **)realloc(_encontros[_numEncontros].categoriasID, (_encontros[_numEncontros].numCategorias + 1) * sizeof(char*));
                     }
                     validaAlocacao(_encontros[_numEncontros].categorias);
                     validaAlocacao(_encontros[_numEncontros].categoriasID);
@@ -2039,7 +2084,11 @@ void carregarEncontros()
                     j = _encontros[_numEncontros].numCategorias;
 
                     _encontros[_numEncontros].categorias[j] = &_categorias[id];
-                    _encontros[_numEncontros].categoriasID[j] = id;
+
+                    _encontros[_numEncontros].categoriasID[j] = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                    validaAlocacao(_encontros[_numEncontros].categoriasID[j]);
+                    strcpy(_encontros[_numEncontros].categoriasID[j], _categorias[id].nome);
+
                     _encontros[_numEncontros].numCategorias++;
                 }
                 else
@@ -2072,7 +2121,7 @@ void rereferenciarAmigos()
         {
             for (int k = 0; k < _numAmigos; k++)
             {
-                if (_encontros[i].amigosID[j] == _amigos[k].id)
+                if (strcmp(_encontros[i].amigosID[j], _amigos[k].nome) == 0)
                 {
                     _encontros[i].amigos[j] = &_amigos[k];
                 }
@@ -2086,7 +2135,7 @@ void rereferenciarLocais(){
     {
         for (int j = 0; j < _numLocais; j++)
         {
-            if (_encontros[i].localID == _local[j].id)
+            if (strcmp(_encontros[i].localID, _local[j].nome) == 0)
             {
                 _encontros[i].local = &_local[j];
             }
@@ -2101,7 +2150,7 @@ void rereferenciarCategorias(){
         {
             for (int k = 0; k < _numCategorias; k++)
             {
-                if (_encontros[i].categoriasID[j] == _categorias[k].id)
+                if (strcmp(_encontros[i].categoriasID[j], _categorias[k].nome) == 0)
                 {
                     _encontros[i].categorias[j] = &_categorias[k];
                 }
@@ -2228,6 +2277,9 @@ void incluirCategoria()
         else
         {
             _categorias = (TCategoria *)realloc(_categorias, (_numCategorias + 1) * sizeof(TCategoria));
+            if(_numEncontros > 0){
+                rereferenciarCategorias();
+            }
         }
         validaAlocacao(_categorias);
 
@@ -2509,6 +2561,10 @@ void excluirCategoria(int indice)
 
     _categorias = (TCategoria *)realloc(_categorias, (_numCategorias - 1) * sizeof(TCategoria));
     _numCategorias--;
+
+    if(_numEncontros > 0){
+        rereferenciarCategorias();
+    }
 }
 
 void salvarCategorias()
@@ -2634,6 +2690,9 @@ void incluirLocal()
     else
     {
         _local = (TLocal *)realloc(_local, (_numLocais + 1) * sizeof(TLocal));
+        if(_numEncontros > 0){
+            rereferenciarLocais();
+        }
     }
     validaAlocacao(_local);
 
@@ -2872,6 +2931,7 @@ void OpcaoExcluirLocal()
         printf("Confirma a exclusao do local[%d]? [S/N]: ", indice + 1);
         scanf("%c", &op);
         fflush(stdin);
+
         op = tolower(op);
     } while (validaSimNao(op));
 
@@ -2899,7 +2959,7 @@ void excluirEncontrosComLocal(int indice)
 
     for (int i = 0; i < _numEncontros; i++)
     {
-        if (_local[indice].id == _encontros[i].local->id)
+        if (strcmp(_encontros[i].localID, _local[indice].nome) == 0)
         {
             excluirEncontro(i);
             i--;
@@ -2926,6 +2986,10 @@ void excluirLocal(int indice)
 
     _local = (TLocal *)realloc(_local, (_numLocais - 1) * sizeof(TLocal));
     _numLocais--;
+
+    if(_numEncontros > 0){
+        rereferenciarLocais();
+    }
 }
 
 void OpcaoListarLocal()
@@ -3237,6 +3301,9 @@ void incluirAmigo()
     else
     {
         _amigos = (TAmigo *)realloc(_amigos, (_numAmigos + 1) * sizeof(TAmigo));
+        if(_numEncontros > 0){
+            rereferenciarAmigos();
+        }
     }
     validaAlocacao(_amigos);
 
@@ -3463,6 +3530,7 @@ void OpcaoExcluirAmigo()
         printf("Confirma a exclusao do amigo[%d]? [S/N]: ", indice + 1);
         scanf("%c", &op);
         fflush(stdin);
+
         op = tolower(op);
     } while (validaSimNao(op));
 
@@ -3491,6 +3559,10 @@ void excluirAmigo(int indice)
 
     _amigos = (TAmigo *)realloc(_amigos, (_numAmigos - 1) * sizeof(TAmigo));
     _numAmigos--;
+
+    if(_numEncontros > 0){
+        rereferenciarAmigos(indice);
+    }
 }
 
 void excluirAmigoDeEncontros(int indice)
@@ -3522,7 +3594,7 @@ void excluirAmigoDeEncontros(int indice)
             for (k = j; k < _encontros[i].numAmigos - 1; k++)
             {
                 _encontros[i].amigos[k] = _encontros[i].amigos[k + 1];
-                _encontros[i].amigosID[k] = _encontros[i].amigosID[k + 1];
+                strcpy(_encontros[i].amigosID[k], _encontros[i].amigosID[k + 1]);
             }
             _encontros[i].numAmigos--;
             j--;
@@ -3818,10 +3890,10 @@ void carregarDados()
 
 void limparMemoria()
 {
+    limparEncontros();
     limparAmigos();
     limparCategorias();
     limparLocais();
-    limparEncontros();
 }
 
 void limparAmigos()
@@ -3831,7 +3903,6 @@ void limparAmigos()
         free(_amigos[i].nome);
         free(_amigos[i].apelido);
         free(_amigos[i].email);
-        free(_amigos[i].telefone);
     }
     free(_amigos);
 }

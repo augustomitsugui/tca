@@ -2151,6 +2151,7 @@ SAmigo cadastraAmigo(int num)
             }
             else
             {
+                erro = 1;
                 a.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
                 if (a.nome == NULL)
                 {
@@ -2162,6 +2163,7 @@ SAmigo cadastraAmigo(int num)
         }
         else
         {
+            erro = 1;
             a.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
 
             if (a.nome == NULL)
@@ -2204,7 +2206,7 @@ SAmigo cadastraAmigo(int num)
     flushs();
 
     erro = 0;
-    while (!erro)
+    while (erro != 1)
     {
         limparTela();
         printf("-- Adicionando Amigo --\n\n");
@@ -2214,9 +2216,9 @@ SAmigo cadastraAmigo(int num)
 
         erro = validaData(a.datanasc.dia, a.datanasc.mes, a.datanasc.ano);
 
-        if (!erro)
+        if (erro != 1)
         {
-            ERRO(-2);
+            ERRO(erro);
         }
     }
 
@@ -2468,8 +2470,7 @@ void editaAmigo()
 
         if (op > 6 || op < 1)
         {
-            op = -1;
-            ERRO(op);
+            ERRO(-1);
         }
         if (op == 6)
         {
@@ -3277,11 +3278,15 @@ void switchEncontro(int op, int encontro)
         {
             printf("\nHora do encontro atual: [ %02d : %02d ]\n", GEncontro[encontro].horaencontro.hora, GEncontro[encontro].horaencontro.minuto);
             printf("Insira o novo horario (HH MM): ");
-            scanf("%2d %2d", &ah, &amin);
+            scanf("%2d%2d", &ah, &amin);
             erro = validaHora(ah, amin);
-            if (!erro)
+            if (erro == -5)
             {
                 ERRO(-5);
+            }
+            else
+            {
+                erro = 1;
             }
         }
         GEncontro[encontro].horaencontro.hora = ah;
